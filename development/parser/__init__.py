@@ -3,22 +3,25 @@
 Ruijie Cloud Backup Toolkit (RCBT)
 
 Parser Package
-Version : 0.4.0
 
 Public Interface
 ----------------
-Expose parser engine tanpa bergantung
-ke versi implementasi.
+Expose parser engine versi aktif.
+
+Phase
+-----
+6.0 - Workspace Integration
 
 ============================================================
 """
 
-from development.parser.versions.parser_v04 import (
+
+from development.parser.versions.parser_v05 import (
     HarParser,
 )
 
 
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 
 
 __all__ = [
