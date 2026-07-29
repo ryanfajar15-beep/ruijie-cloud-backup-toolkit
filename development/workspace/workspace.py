@@ -1,93 +1,199 @@
 """
-Workspace Manager
-Phase 3.5.1
+============================================================
+Ruijie Cloud Backup Toolkit (RCBT)
 
-Mengelola struktur workspace setiap project.
+Module  : Workspace Manager
+Phase   : 5.0 - Workspace Flow
+
+Purpose
+-------
+Mengelola workspace project.
+
+Responsibilities
+----------------
+✓ Membuat struktur project
+✓ Menggunakan PathManager
+✓ Menyediakan akses path standar
+
+Tidak melakukan:
+✗ Import HAR
+✗ Parser
+✗ Backup
+✗ Report generation
+
+============================================================
 """
 
-from pathlib import Path
+from development.workspace.path_manager import (
+    PathManager,
+)
+
+
+VERSION = "5.0.0"
 
 
 class Workspace:
 
-    def __init__(self, project_name: str):
+    def __init__(
+        self,
+        project_id,
+        base_dir="projects",
+    ):
 
-        self.project_name = project_name
+        self.project_id = project_id
 
-        self.root = Path("projects") / project_name
+        self.paths = PathManager(
+            project_id,
+            base_dir,
+        )
 
-        self.input = self.root / "input"
-        self.output = self.root / "output"
-        self.report = self.root / "report"
-        self.logs = self.root / "logs"
+
+    # -------------------------------------------------
+
+    @property
+    def root(self):
+
+        return self.paths.root
+
+
+    # -------------------------------------------------
+
+    @property
+    def input(self):
+
+        return self.paths.input_dir
+
+
+    # -------------------------------------------------
+
+    @property
+    def output(self):
+
+        return self.paths.output_dir
+
+
+    # -------------------------------------------------
+
+    @property
+    def images(self):
+
+        return self.paths.images_dir
+
+
+    # -------------------------------------------------
+
+    @property
+    def images_original(self):
+
+        return self.paths.images_original
+
+
+    # -------------------------------------------------
+
+    @property
+    def images_processed(self):
+
+        return self.paths.images_processed
+
+
+    # -------------------------------------------------
+
+    @property
+    def report(self):
+
+        return self.paths.report_dir
+
+
+    # -------------------------------------------------
+
+    @property
+    def logs(self):
+
+        return self.paths.logs_dir
+
 
     # -------------------------------------------------
 
     def create(self):
+        """
+        Create complete workspace structure.
+        """
 
-        self.root.mkdir(
-            parents=True,
-            exist_ok=True
-        )
+        folders = [
 
-        self.input.mkdir(
-            parents=True,
-            exist_ok=True
-        )
+            self.root,
 
-        self.output.mkdir(
-            parents=True,
-            exist_ok=True
-        )
+            self.input,
 
-        self.report.mkdir(
-            parents=True,
-            exist_ok=True
-        )
+            self.output,
 
-        self.logs.mkdir(
-            parents=True,
-            exist_ok=True
-        )
+            self.images,
+
+            self.images_original,
+
+            self.images_processed,
+
+            self.report,
+
+            self.logs,
+
+        ]
+
+
+        for folder in folders:
+
+            folder.mkdir(
+                parents=True,
+                exist_ok=True,
+            )
+
+
+        return self.root
+
 
     # -------------------------------------------------
 
     @property
     def project_file(self):
 
-        return self.root / "project.json"
+        return self.paths.project_file
+
+
+    # -------------------------------------------------
 
     @property
     def session_har(self):
 
-        return self.input / "session.har"
+        return self.paths.session_har
 
-    @property
-    def request_catalog(self):
 
-        return self.output / "request_catalog.json"
-
-    @property
-    def auth_catalog(self):
-
-        return self.output / "auth_catalog.json"
-
-    @property
-    def api_catalog(self):
-
-        return self.output / "api_catalog.json"
+    # -------------------------------------------------
 
     @property
     def backup_file(self):
 
-        return self.output / "backup.zip"
+        return self.paths.backup_file
+
+
+    # -------------------------------------------------
 
     @property
-    def report_file(self):
+    def report_pdf(self):
 
-        return self.report / "report.html"
+        return self.paths.report_pdf
+
+
+    # -------------------------------------------------
 
     @property
-    def log_file(self):
+    def report_excel(self):
 
-        return self.logs / "backup.log"
+        return self.paths.report_excel
+
+
+    # -------------------------------------------------
+
+    @property
+    def report_html(self):
+
+        return self.paths.report_html

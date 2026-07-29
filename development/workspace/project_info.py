@@ -1,103 +1,189 @@
 """
-Project Information
+============================================================
+Ruijie Cloud Backup Toolkit (RCBT)
 
-Mengambil informasi project dari HAR.
+Module  : Project Information
+Phase   : 5.0 - Workspace Import Flow
+
+Purpose
+-------
+Membuat informasi dasar project
+berdasarkan file HAR.
+
+Responsibilities
+----------------
+✓ Generate project id
+✓ Detect project name
+✓ Detect cloud host
+✓ Generate metadata
+✓ Tidak membuat folder
+✓ Tidak memindahkan file
+
+============================================================
 """
 
-from urllib.parse import urlparse, parse_qs
+from datetime import datetime
+from pathlib import Path
+from urllib.parse import urlparse
+import json
+
+
+VERSION = "5.0.0"
 
 
 class ProjectInfo:
 
-    def __init__(self, har_data):
+    def __init__(
+        self,
+        har_file,
+    ):
 
-        self.har = har_data
-
-    # -------------------------------------------------
-
-    @property
-    def entries(self):
-
-        return self.har.get(
-            "log",
-            {}
-        ).get(
-            "entries",
-            []
+        self.har_file = Path(
+            har_file
         )
 
-    # -------------------------------------------------
+        self.data = None
 
-    def detect_project_id(self):
-
-        """
-        Mengambil Project ID dari URL.
-
-        Contoh:
-
-        /project/187924
-        /scheme/device/topo/187924
-        """
-
-        for entry in self.entries:
-
-            request = entry.get("request", {})
-            url = request.get("url", "")
-
-            parts = url.split("/")
-
-            for part in parts:
-
-                if part.isdigit():
-
-                    return part
-
-        return "unknown"
 
     # -------------------------------------------------
 
-    def detect_project_name(self):
-
+    def load(self):
         """
-        Sementara menggunakan Project ID.
-
-        Nanti akan diperbaiki jika sudah menemukan
-        endpoint yang mengembalikan nama project.
+        Load HAR JSON.
         """
 
-        project_id = self.detect_project_id()
+        with self.har_file.open(
+            "r",
+            encoding="utf-8",
+        ) as file:
 
-        return f"project_{project_id}"
+            self.data = json.load(
+                file
+            )
+
+        return self.data
+
+
+    # -------------------------------------------------
+
+    def get_entries(self):
+        """
+        Get HAR entries.
+        """
+
+        if self.data is None:
+
+            self.load()
+
+        return (
+            self.data
+            .get("log", {})
+            .get("entries", [])
+        )
+
 
     # -------------------------------------------------
 
     def detect_cloud_host(self):
+        """
+        Detect cloud hostname.
+        """
 
-        if not self.entries:
-            return "unknown"
+        for entry in self.get_entries():
 
-        request = self.entries[0].get(
-            "request",
-            {}
+            url = (
+                entry
+                .get("request", {})
+                .get("url", "")
+            )
+
+            if url:
+
+                parsed = urlparse(
+                    url
+                )
+
+                if parsed.netloc:
+
+                    return parsed.netloc
+
+
+        return "unknown"
+
+
+    # -------------------------------------------------
+
+    def detect_project_name(self):
+        """
+        Temporary project name.
+
+        Akan dikembangkan setelah
+        API discovery tersedia.
+        """
+
+        host = self.detect_cloud_host()
+
+        return (
+            host
+            .replace(
+                ".",
+                "_",
+            )
         )
 
-        url = request.get("url", "")
 
-        return urlparse(url).netloc
+    # -------------------------------------------------
+
+    def generate_project_id(self):
+        """
+        Generate unique project id.
+        """
+
+        timestamp = datetime.now().strftime(
+            "%Y%m%d_%H%M%S"
+        )
+
+        name = self.detect_project_name()
+
+        return (
+            f"{timestamp}_{name}"
+        )
+
 
     # -------------------------------------------------
 
     def info(self):
+        """
+        Return project metadata.
+        """
 
-        project_id = self.detect_project_id()
+        project_id = (
+            self.generate_project_id()
+        )
 
         return {
 
+            "version": VERSION,
+
             "project_id": project_id,
 
-            "project_name": self.detect_project_name(),
+            "project_name": (
+                self.detect_project_name()
+            ),
 
-            "workspace": f"{project_id}_{self.detect_project_name()}",
+            "created_at": (
+                datetime.now()
+                .isoformat()
+            ),
 
-            "cloud_host": self.detect_cloud_host(),
+            "source_file": (
+                self.har_file.name
+            ),
+
+            "cloud_host": (
+                self.detect_cloud_host()
+            ),
+
+            "status": "created",
+
         }

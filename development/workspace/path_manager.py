@@ -1,120 +1,189 @@
 """
-Path Manager
+============================================================
+Ruijie Cloud Backup Toolkit (RCBT)
 
-Mengelola seluruh path project workspace.
+Module  : Path Manager
+Phase   : 5.0 - Workspace Flow
+
+Purpose
+-------
+Mengelola seluruh lokasi folder project.
+
+Responsibilities
+----------------
+✓ Menyediakan path standar workspace
+✓ Tidak membuat folder
+✓ Tidak menjalankan proses backup
+✓ Tidak membaca file
+
+Structure
+---------
+projects/<project_id>/
+
+├── input/
+├── output/
+├── images/
+│   ├── original/
+│   └── processed/
+├── report/
+└── logs/
+
+============================================================
 """
 
 from pathlib import Path
 
-from development.workspace.workspace import Workspace
+
+VERSION = "5.0.0"
 
 
 class PathManager:
 
-    def __init__(self, project_name):
+    def __init__(
+        self,
+        project_id,
+        base_dir="projects",
+    ):
 
-        self.workspace = Workspace(project_name)
+        self.project_id = project_id
 
-        self.workspace.create()
+        self.root = (
+            Path(base_dir)
+            /
+            project_id
+        )
 
     # -------------------------------------------------
 
     @property
-    def root(self):
+    def input_dir(self):
 
-        return self.workspace.root
+        return self.root / "input"
 
-    @property
-    def input(self):
 
-        return self.workspace.input
+    # -------------------------------------------------
 
     @property
-    def output(self):
+    def output_dir(self):
 
-        return self.workspace.output
+        return self.root / "output"
 
-    @property
-    def report(self):
 
-        return self.workspace.report
+    # -------------------------------------------------
 
     @property
-    def logs(self):
+    def images_dir(self):
 
-        return self.workspace.logs
+        return self.root / "images"
+
+
+    # -------------------------------------------------
+
+    @property
+    def images_original(self):
+
+        return (
+            self.images_dir
+            /
+            "original"
+        )
+
+
+    # -------------------------------------------------
+
+    @property
+    def images_processed(self):
+
+        return (
+            self.images_dir
+            /
+            "processed"
+        )
+
+
+    # -------------------------------------------------
+
+    @property
+    def report_dir(self):
+
+        return self.root / "report"
+
+
+    # -------------------------------------------------
+
+    @property
+    def logs_dir(self):
+
+        return self.root / "logs"
+
 
     # -------------------------------------------------
 
     @property
     def session_har(self):
 
-        return self.workspace.session_har
+        return (
+            self.input_dir
+            /
+            "session.har"
+        )
+
+
+    # -------------------------------------------------
 
     @property
-    def project_json(self):
+    def project_file(self):
 
-        return self.workspace.project_file
+        return (
+            self.root
+            /
+            "project.json"
+        )
 
-    @property
-    def request_catalog(self):
 
-        return self.workspace.request_catalog
-
-    @property
-    def auth_catalog(self):
-
-        return self.workspace.auth_catalog
-
-    @property
-    def api_catalog(self):
-
-        return self.workspace.api_catalog
+    # -------------------------------------------------
 
     @property
     def backup_file(self):
 
-        return self.workspace.backup_file
+        return (
+            self.output_dir
+            /
+            "backup.zip"
+        )
 
-    @property
-    def report_file(self):
-
-        return self.workspace.report_file
-
-    @property
-    def log_file(self):
-
-        return self.workspace.log_file
 
     # -------------------------------------------------
 
-    def as_dict(self):
+    @property
+    def report_pdf(self):
 
-        return {
+        return (
+            self.report_dir
+            /
+            "report.pdf"
+        )
 
-            "root": self.root,
 
-            "input": self.input,
+    # -------------------------------------------------
 
-            "output": self.output,
+    @property
+    def report_excel(self):
 
-            "report": self.report,
+        return (
+            self.report_dir
+            /
+            "report.xlsx"
+        )
 
-            "logs": self.logs,
 
-            "session_har": self.session_har,
+    # -------------------------------------------------
 
-            "project_json": self.project_json,
+    @property
+    def report_html(self):
 
-            "request_catalog": self.request_catalog,
-
-            "auth_catalog": self.auth_catalog,
-
-            "api_catalog": self.api_catalog,
-
-            "backup_file": self.backup_file,
-
-            "report_file": self.report_file,
-
-            "log_file": self.log_file,
-        }
+        return (
+            self.report_dir
+            /
+            "report.html"
+        )
