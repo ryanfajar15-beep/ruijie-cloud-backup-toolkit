@@ -1,71 +1,81 @@
 """
-Request Reader
-Phase 3.1 (Final)
+============================================================
+Ruijie Cloud Backup Toolkit (RCBT)
 
-Membaca seluruh informasi request dari HAR entries.
+Module  : Request Reader
+Version : 0.4.0
+Phase   : 4.1 - Authentication Discovery
+
+Purpose
+-------
+Membaca HTTP Request dari HAR entry.
+
+Responsibilities
+----------------
+✓ Membaca entries HAR
+✓ Mengambil request object
+✓ Normalisasi struktur request
+✓ Tidak melakukan filtering API
+✓ Tidak melakukan endpoint processing
+✓ Tidak melakukan output file
+
+============================================================
 """
 
 
-def read_requests(entries):
+VERSION = "0.4.0"
+
+
+def read_requests(entries: list) -> list:
     """
-    Mengubah HAR entries menjadi list request lengkap.
+    Extract request data from HAR entries.
+
+    Parameters
+    ----------
+    entries : list
+        HAR log entries.
 
     Returns
     -------
     list
+        Normalized request objects.
     """
 
     requests = []
 
     for entry in entries:
 
-        request = entry.get("request", {})
-        response = entry.get("response", {})
-        content = response.get("content", {})
+        request = entry.get("request")
 
-        requests.append({
+        if not request:
+            continue
 
-            # ==================================================
-            # Basic
-            # ==================================================
+        requests.append(
+            {
+                "method": request.get(
+                    "method",
+                    ""
+                ),
 
-            "method": request.get("method"),
-            "url": request.get("url"),
-            "status": response.get("status"),
+                "url": request.get(
+                    "url",
+                    ""
+                ),
 
-            # ==================================================
-            # Request
-            # ==================================================
+                "headers": request.get(
+                    "headers",
+                    []
+                ),
 
-            "headers": request.get("headers", []),
-            "cookies": request.get("cookies", []),
-            "queryString": request.get("queryString", []),
-            "postData": request.get("postData", {}),
+                "queryString": request.get(
+                    "queryString",
+                    []
+                ),
 
-            # ==================================================
-            # Response
-            # ==================================================
-
-            "content": {
-                "mimeType": content.get("mimeType"),
-                "size": content.get("size"),
-                "compression": content.get("compression"),
-            },
-
-            # ==================================================
-            # Network
-            # ==================================================
-
-            "httpVersion": request.get("httpVersion"),
-            "headersSize": request.get("headersSize"),
-            "bodySize": request.get("bodySize"),
-
-            # ==================================================
-            # Timing
-            # ==================================================
-
-            "startedDateTime": entry.get("startedDateTime"),
-            "time": entry.get("time"),
-        })
+                "postData": request.get(
+                    "postData"
+                ),
+            }
+        )
 
     return requests

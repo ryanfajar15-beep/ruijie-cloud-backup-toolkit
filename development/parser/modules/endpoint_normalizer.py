@@ -1,41 +1,85 @@
 """
-Endpoint Normalizer
-Phase 3.3
+============================================================
+Ruijie Cloud Backup Toolkit (RCBT)
 
-Mengubah URL API menjadi endpoint yang bersih
-dan menghapus endpoint yang duplikat.
+Module  : Endpoint Normalizer
+Version : 0.4.0
+Phase   : 4.1 - Authentication Discovery
+
+Purpose
+-------
+Normalisasi endpoint API dari hasil HAR.
+
+Responsibilities
+----------------
+✓ Membersihkan URL endpoint
+✓ Menghapus query parameter
+✓ Menghilangkan duplicate endpoint
+✓ Tidak melakukan filtering API
+✓ Tidak melakukan output file
+
+============================================================
 """
+
+from urllib.parse import urlparse
+
+
+VERSION = "0.4.0"
 
 
 def normalize_endpoint(url: str) -> str:
     """
-    Contoh:
+    Normalize single endpoint URL.
 
-    https://cloud-as.ruijienetworks.com/webproxy/common/api?/scheme/info
+    Example
+    -------
+    Before:
+    https://cloud.example.com/api/device?id=10
 
-    menjadi
-
-    /scheme/info
+    After:
+    https://cloud.example.com/api/device
     """
 
-    marker = "/webproxy/common/api?"
+    if not url:
+        return ""
 
-    if marker not in url:
-        return url
+    parsed = urlparse(url)
 
-    return url.split(marker, 1)[1]
+    return (
+        f"{parsed.scheme}://"
+        f"{parsed.netloc}"
+        f"{parsed.path}"
+    )
 
 
-def normalize_requests(api_requests):
+def normalize_requests(
+    requests: list,
+) -> list:
+    """
+    Normalize request list.
+
+    Parameters
+    ----------
+    requests : list
+        API requests.
+
+    Returns
+    -------
+    list
+        Requests with normalized endpoint.
+    """
 
     normalized = []
 
-    for request in api_requests:
+    for request in requests:
 
         item = request.copy()
 
         item["endpoint"] = normalize_endpoint(
-            request["url"]
+            request.get(
+                "url",
+                "",
+            )
         )
 
         normalized.append(item)
@@ -43,24 +87,44 @@ def normalize_requests(api_requests):
     return normalized
 
 
-def unique_endpoints(api_requests):
+def unique_endpoints(
+    requests: list,
+) -> list:
+    """
+    Remove duplicate endpoints.
+
+    Parameters
+    ----------
+    requests : list
+        Normalized requests.
+
+    Returns
+    -------
+    list
+        Unique endpoint catalog.
+    """
+
+    result = []
 
     seen = set()
 
-    unique = []
+    for request in requests:
 
-    for request in api_requests:
-
-        key = (
-            request["method"],
-            request["endpoint"]
+        endpoint = request.get(
+            "endpoint",
+            "",
         )
 
-        if key in seen:
+        if not endpoint:
             continue
 
-        seen.add(key)
+        if endpoint in seen:
+            continue
 
-        unique.append(request)
+        seen.add(endpoint)
 
-    return unique
+        result.append(
+            request
+        )
+
+    return result

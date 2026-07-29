@@ -26,29 +26,44 @@ Feature
 import json
 from pathlib import Path
 
-from development.parser.modules.request_reader import read_requests
-from development.parser.modules.api_filter import filter_api_requests
+from development.parser.modules.request_reader import (
+    read_requests,
+)
+
+from development.parser.modules.api_filter import (
+    filter_api_requests,
+)
+
 from development.parser.modules.endpoint_normalizer import (
     normalize_requests,
     unique_endpoints,
 )
+
 from development.parser.modules.request_catalog import (
     save_request_catalog,
 )
+
 from development.parser.modules.auth_discovery import (
     discover_auth,
 )
 
+
 VERSION = "0.4.0"
-HAR_FILE = Path("input/cloud-as.ruijienetworks.com.har")
 
 
 class HarParser:
 
-    def __init__(self, har_file):
+    def __init__(
+        self,
+        har_file: Path,
+    ):
 
-        self.har_file = Path(har_file)
+        self.har_file = Path(
+            har_file
+        )
+
         self.data = None
+
 
     # -------------------------------------------------
 
@@ -56,19 +71,24 @@ class HarParser:
 
         return self.har_file.exists()
 
+
     # -------------------------------------------------
 
     def validate(self):
 
         if not self.exists():
+
             raise FileNotFoundError(
                 f"HAR tidak ditemukan:\n{self.har_file}"
             )
 
+
         if self.har_file.suffix.lower() != ".har":
+
             raise ValueError(
                 "File bukan HAR"
             )
+
 
     # -------------------------------------------------
 
@@ -76,179 +96,107 @@ class HarParser:
 
         self.validate()
 
-        with open(
-            self.har_file,
+        with self.har_file.open(
             "r",
-            encoding="utf-8"
-        ) as f:
+            encoding="utf-8",
+        ) as file:
 
-            self.data = json.load(f)
+            self.data = json.load(
+                file
+            )
 
         return self.data
+
 
     # -------------------------------------------------
 
     def get_entries(self):
 
         if self.data is None:
+
             raise RuntimeError(
                 "HAR belum di-load."
             )
 
-        return self.data.get("log", {}).get("entries", [])
-    # ============================================================
 
+        return (
+            self.data
+            .get("log", {})
+            .get("entries", [])
+        )
 
-def banner():
-
-    print("=" * 60)
-    print("Ruijie Cloud Backup Toolkit")
-    print(f"Parser Version : {VERSION}")
-    print("=" * 60)
-    print()
-
-
-# ============================================================
-
-
-def main():
-
-    banner()
-
-    parser = HarParser(HAR_FILE)
-
-    print("[1] Checking HAR file...")
-
-    parser.validate()
-
-    print("    ✓ File ditemukan")
-    print()
 
     # -------------------------------------------------
 
-    print("[2] Loading HAR...")
+    def run(
+        self,
+        output_dir: Path,
+    ) -> dict:
+        """
+        Execute parser workflow.
 
-    parser.load()
+        Parameters
+        ----------
+        output_dir : Path
+            Workspace output directory.
 
-    print("    ✓ HAR berhasil dibaca")
-    print()
+        Returns
+        -------
+        dict
+            Parser result.
+        """
 
-    # -------------------------------------------------
+        self.load()
 
-    print("[3] Reading Entries...")
 
-    entries = parser.get_entries()
+        entries = self.get_entries()
 
-    print("    ✓ Entries berhasil dibaca")
-    print()
 
-    print(f"Total Entries : {len(entries)}")
-    print()
+        requests = read_requests(
+            entries
+        )
 
-    # -------------------------------------------------
 
-    print("[4] Reading Requests...")
+        api_requests = filter_api_requests(
+            requests
+        )
 
-    requests = read_requests(entries)
 
-    print(f"    ✓ Total Requests : {len(requests)}")
-    print()
+        normalized = normalize_requests(
+            api_requests
+        )
 
-    # -------------------------------------------------
 
-    print("[5] Filtering API Requests...")
+        unique = unique_endpoints(
+            normalized
+        )
 
-    api_requests = filter_api_requests(requests)
 
-    print(f"    ✓ API Requests : {len(api_requests)}")
-    print()
+        request_catalog = save_request_catalog(
+            unique,
+            output_dir,
+        )
 
-    # -------------------------------------------------
 
-    print("[6] Normalizing Endpoints...")
+        auth_catalog = discover_auth(
+            requests
+        )
 
-    normalized = normalize_requests(api_requests)
 
-    unique = unique_endpoints(normalized)
+        return {
 
-    print(f"    ✓ Unique Endpoints : {len(unique)}")
-    print()
+            "version": VERSION,
 
-    # -------------------------------------------------
+            "requests": len(requests),
 
-    print("[7] Saving Request Catalog...")
+            "api_requests": len(api_requests),
 
-    output_file = save_request_catalog(unique)
+            "unique_endpoints": len(unique),
 
-    print(f"    ✓ {output_file} berhasil dibuat")
-    print()
-        # -------------------------------------------------
+            "request_catalog": str(
+                request_catalog
+            ),
 
-    print("[8] Discovering Authentication...")
+            "authentication": auth_catalog,
 
-    auth = discover_auth(requests)
-
-    print(
-        f"    ✓ Headers        : {len(auth['headers'])}"
-    )
-
-    print(
-        f"    ✓ Cookies       : {len(auth['cookies'])}"
-    )
-
-    print(
-        f"    ✓ Authorization : {len(auth['authorization'])}"
-    )
-
-    print()
-
-    # -------------------------------------------------
-
-    print("=" * 70)
-    print("Authentication Discovery")
-    print("=" * 70)
-
-    print("\nAuthorization")
-
-    if auth["authorization"]:
-
-        for value in auth["authorization"]:
-            print(value)
-
-    else:
-
-        print("Not Found")
-
-    # -------------------------------------------------
-
-    print("\nCookies")
-
-    if auth["cookies"]:
-
-        for cookie in auth["cookies"]:
-            print(cookie)
-
-    else:
-
-        print("Not Found")
-
-    # -------------------------------------------------
-
-    print("\nHeaders")
-
-    for name in sorted(auth["headers"]):
-
-        print(f"\n{name}")
-
-        for value in auth["headers"][name]:
-
-            print(f"  {value}")
-
-    print()
-
-    print("Parser V04 SUCCESS")
-    print()
-    # ============================================================
-
-if __name__ == "__main__":
-    main()
+        }

@@ -1,17 +1,51 @@
 """
-Authentication Discovery
-Phase 4.1
+============================================================
+Ruijie Cloud Backup Toolkit (RCBT)
 
-Menemukan Header, Cookie, dan Authorization
-dari seluruh request HAR.
+Module  : Authentication Discovery
+Version : 0.4.0
+Phase   : 4.1 - Authentication Discovery
+
+Purpose
+-------
+Mendeteksi informasi authentication dari request HAR.
+
+Responsibilities
+----------------
+✓ Extract headers
+✓ Extract cookies
+✓ Extract authorization token
+✓ Return authentication catalog
+
+Tidak melakukan:
+✗ File output
+✗ Workspace management
+✗ API processing
+
+============================================================
 """
 
 from collections import defaultdict
 
 
-def discover_auth(requests):
+VERSION = "0.4.0"
+
+
+def discover_auth(
+    requests: list,
+) -> dict:
     """
-    Mencari informasi authentication dari request.
+    Discover authentication data.
+
+    Parameters
+    ----------
+    requests : list
+        Normalized request objects.
+
+    Returns
+    -------
+    dict
+        Authentication catalog.
     """
 
     result = {
@@ -22,30 +56,51 @@ def discover_auth(requests):
 
     for request in requests:
 
-        # -----------------------------
-        # Headers
-        # -----------------------------
-        for header in request.get("headers", []):
+        for header in request.get(
+            "headers",
+            [],
+        ):
 
-            name = header.get("name", "")
-            value = header.get("value", "")
+            name = header.get(
+                "name",
+                "",
+            )
+
+            value = header.get(
+                "value",
+                "",
+            )
 
             if not name:
                 continue
 
-            result["headers"][name].add(value)
+            result["headers"][name].add(
+                value
+            )
 
-            if name.lower() == "authorization":
-                result["authorization"].add(value)
+            lower_name = name.lower()
 
-            if name.lower() == "cookie":
-                result["cookies"].add(value)
+            if lower_name == "authorization":
+                result["authorization"].add(
+                    value
+                )
+
+            if lower_name == "cookie":
+                result["cookies"].add(
+                    value
+                )
 
     return {
         "headers": {
-            k: sorted(list(v))
-            for k, v in result["headers"].items()
+            key: sorted(list(values))
+            for key, values in result["headers"].items()
         },
-        "cookies": sorted(list(result["cookies"])),
-        "authorization": sorted(list(result["authorization"])),
+
+        "cookies": sorted(
+            list(result["cookies"])
+        ),
+
+        "authorization": sorted(
+            list(result["authorization"])
+        ),
     }

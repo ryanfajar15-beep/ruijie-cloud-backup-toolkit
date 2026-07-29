@@ -1,44 +1,77 @@
 """
-Request Catalog
-Phase 3.4
+============================================================
+Ruijie Cloud Backup Toolkit (RCBT)
 
-Menyimpan hasil Request Discovery ke file JSON.
+Module  : Request Catalog
+Version : 0.4.0
+Phase   : 4.1 - Authentication Discovery
+
+Purpose
+-------
+Menyimpan hasil endpoint discovery.
+
+Responsibilities
+----------------
+✓ Membuat request catalog JSON
+✓ Menyimpan ke workspace output
+✓ Tidak menentukan lokasi workspace
+✓ Tidak membaca HAR
+
+============================================================
 """
 
 import json
 from pathlib import Path
 
 
-OUTPUT_DIR = Path("output")
-OUTPUT_FILE = OUTPUT_DIR / "request_catalog.json"
+VERSION = "0.4.0"
 
 
-def save_request_catalog(requests):
+def save_request_catalog(
+    requests: list,
+    output_dir: Path,
+) -> Path:
     """
-    Menyimpan request catalog ke file JSON.
+    Save request catalog.
 
     Parameters
     ----------
     requests : list
-        List hasil endpoint discovery.
+        Endpoint discovery result.
+
+    output_dir : Path
+        Workspace output directory.
+
+    Returns
+    -------
+    Path
+        Generated JSON file.
     """
 
-    OUTPUT_DIR.mkdir(
-        parents=True,
-        exist_ok=True
+    output_dir = Path(
+        output_dir
     )
 
-    with open(
-        OUTPUT_FILE,
+    output_dir.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    output_file = (
+        output_dir /
+        "request_catalog.json"
+    )
+
+    with output_file.open(
         "w",
-        encoding="utf-8"
-    ) as f:
+        encoding="utf-8",
+    ) as file:
 
         json.dump(
             requests,
-            f,
+            file,
             indent=4,
-            ensure_ascii=False
+            ensure_ascii=False,
         )
 
-    return OUTPUT_FILE
+    return output_file
