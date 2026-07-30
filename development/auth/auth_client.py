@@ -10,12 +10,14 @@ from typing import Optional
 import requests
 
 from .exceptions import (
-    AuthenticationError,
     LoginFailedError,
-    NetworkError,
     SessionExpiredError,
 )
-from .models import AuthenticationResult, AuthenticationStatus
+from .login_service import LoginService
+from .models import (
+    AuthenticationResult,
+    AuthenticationStatus,
+)
 from .session_provider import SessionProvider
 
 
@@ -38,7 +40,13 @@ class AuthClient:
     ) -> None:
 
         self._timeout = timeout
-        self._session_provider = session_provider or SessionProvider()
+
+        self._session_provider = (
+            session_provider
+            or SessionProvider()
+        )
+
+        self._login_service = LoginService()
 
     @property
     def session(self) -> requests.Session:
@@ -64,69 +72,25 @@ class AuthClient:
                 "Password is empty."
             )
 
-        self.load_login_page()
+        self._login_service.load_login_page()
 
-        public_key = self.get_rsa_key()
-
-        encrypted_password = self.encrypt_password(
-            password=password,
-            public_key=public_key,
+        public_key = (
+            self._login_service.get_rsa_key()
         )
 
-        self.submit_login(
+        encrypted_password = (
+            self._login_service.encrypt_password(
+                password=password,
+                public_key=public_key,
+            )
+        )
+
+        self._login_service.submit_login(
             username=username,
             encrypted_password=encrypted_password,
         )
 
         return self.verify_session()
-
-    def load_login_page(self) -> None:
-        """
-        Load login page.
-
-        TODO:
-        Implement in Phase 7.3.
-        """
-
-        raise NotImplementedError
-
-    def get_rsa_key(self) -> str:
-        """
-        Retrieve RSA public key.
-
-        TODO:
-        Implement in Phase 7.4.
-        """
-
-        raise NotImplementedError
-
-    def encrypt_password(
-        self,
-        password: str,
-        public_key: str,
-    ) -> str:
-        """
-        Encrypt password.
-
-        TODO:
-        Implement in Phase 7.5.
-        """
-
-        raise NotImplementedError
-
-    def submit_login(
-        self,
-        username: str,
-        encrypted_password: str,
-    ) -> None:
-        """
-        Submit login request.
-
-        TODO:
-        Implement in Phase 7.6.
-        """
-
-        raise NotImplementedError
 
     def logout(self) -> AuthenticationResult:
         """
