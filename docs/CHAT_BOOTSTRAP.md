@@ -6,17 +6,17 @@
 ## Purpose
 
 
-File ini adalah entry point utama ketika melanjutkan project RCBT dari chat baru.
+File ini adalah entry point ketika melanjutkan project RCBT dari chat baru.
 
 
-Tujuan file ini:
+Fungsi utama:
 
 
-- memberikan context terakhir project
-- menjaga konsistensi architecture
-- menyimpan aturan development
-- menjelaskan workflow engineering
-- memastikan dokumentasi selalu mengikuti perubahan code
+- memberikan pemahaman project
+- menjaga architecture consistency
+- menjelaskan development workflow
+- menjelaskan aturan implementasi
+- menjaga dokumentasi engineering
 
 
 
@@ -35,10 +35,11 @@ Type:
 Production-grade automation toolkit
 
 
-Purpose:
+
+Tujuan:
 
 
-RCBT dibuat untuk melakukan:
+RCBT dibuat untuk:
 
 
 - membaca export HAR
@@ -46,7 +47,7 @@ RCBT dibuat untuk melakukan:
 - memahami workflow internal Ruijie Cloud
 - mengelola authentication
 - menjalankan backup automation
-- menghasilkan output dan report
+- menghasilkan report
 
 
 
@@ -58,16 +59,16 @@ RCBT dibuat untuk melakukan:
 Repository adalah sumber utama project.
 
 
-ChatGPT tidak menggunakan history chat lama sebagai memory permanen.
+Chat history bukan sumber permanen.
 
 
-Karena itu project context disimpan pada:
+Context project disimpan melalui:
 
 
 docs/
 
 
-Dengan struktur:
+Structure:
 
 
 docs/
@@ -89,7 +90,7 @@ docs/
 # Context Reading Order
 
 
-Saat membuka chat baru, lakukan:
+Saat membuka chat baru:
 
 
 1. Baca:
@@ -106,21 +107,21 @@ docs/SESSION_CONTEXT.md
 
 
 
-3. Baca history:
+3. Baca history phase terakhir:
 
 
 docs/HISTORY/
 
 
 
-4. Jika membutuhkan keputusan teknis:
+4. Jika membutuhkan keputusan:
 
 
 docs/DECISIONS/
 
 
 
-5. Jika membutuhkan masalah sebelumnya:
+5. Jika membutuhkan error sebelumnya:
 
 
 docs/TROUBLESHOOTING/
@@ -130,29 +131,10 @@ docs/TROUBLESHOOTING/
 Tujuan:
 
 
-Melanjutkan project dari posisi terakhir.
+Melanjutkan dari kondisi terakhir.
 
 
-Jangan mengulang investigasi yang sudah selesai.
-
-
-
----
-
-# Current Development Philosophy
-
-
-RCBT bukan script sekali pakai.
-
-
-RCBT dikembangkan sebagai toolkit dengan:
-
-
-- modular architecture
-- reusable component
-- separation of responsibility
-- maintainable workflow
-- documented decision
+Tidak mengulang investigasi yang sudah selesai.
 
 
 
@@ -169,7 +151,6 @@ incoming/
 
     |
 
-
     v
 
 
@@ -178,15 +159,13 @@ backup.py
 
     |
 
-
     v
 
 
-Workspace Manager
+Workspace
 
 
     |
-
 
     v
 
@@ -196,7 +175,6 @@ Parser
 
     |
 
-
     v
 
 
@@ -204,7 +182,6 @@ Authentication
 
 
     |
-
 
     v
 
@@ -214,7 +191,6 @@ API Client
 
     |
 
-
     v
 
 
@@ -222,7 +198,6 @@ Backup Workflow
 
 
     |
-
 
     v
 
@@ -236,7 +211,7 @@ Report
 # Main Controller Rule
 
 
-backup.py adalah Main Controller.
+backup.py adalah controller utama.
 
 
 Tanggung jawab:
@@ -246,186 +221,356 @@ Tanggung jawab:
 - menghubungkan module
 
 
+
 backup.py tidak boleh:
 
 
 - parsing HAR
-- melakukan authentication logic
-- membuat API request detail
-- melakukan download logic
-- membuat report logic
+- authentication logic
+- API implementation detail
+- download logic
+- report generation logic
 
 
 
 ---
 
-# Module Responsibility Rule
+# Module Responsibility
 
 
-Setiap module hanya memiliki satu tanggung jawab.
+## Parser
 
 
-
-Parser:
-
-
-Membaca dan memproses data.
+Bertanggung jawab:
 
 
-
-Workspace:
-
-
-Mengelola workspace.
+- membaca data
+- normalisasi data
+- ekstraksi informasi
 
 
 
-Authentication:
+Tidak melakukan:
 
 
-Mengelola session dan credential.
-
-
-
-API Client:
-
-
-Komunikasi dengan API.
-
-
-
-Backup:
-
-
-Menjalankan proses backup.
-
-
-
-Report:
-
-
-Menghasilkan laporan.
-
-
-
-Jangan memindahkan tanggung jawab antar module tanpa keputusan architecture.
+- login
+- API request
+- backup execution
 
 
 
 ---
 
-# Architecture Change Rule
+## Workspace
 
 
-Perubahan architecture tidak boleh dilakukan secara spontan.
+Bertanggung jawab:
 
 
-Sebelum perubahan besar:
-
-
-1. Jelaskan masalah.
-
-2. Analisa pilihan solusi.
-
-3. Tentukan keputusan.
-
-4. Dokumentasikan impact.
+- project workspace
+- path management
+- metadata project
 
 
 
-Semua perubahan architecture harus memiliki decision record.
+Tidak melakukan:
+
+
+- parsing
+- authentication
+- backup
 
 
 
 ---
 
-# Current Phase Status
+## Authentication
 
 
-Completed:
+Bertanggung jawab:
 
 
-Phase 1
-
-Project Bootstrap
-
-
-
-Phase 2
-
-Workspace Manager
+- credential handling
+- login flow
+- session management
 
 
 
-Phase 3
-
-HAR Import & Parser
+Tidak melakukan:
 
 
-
-Phase 4
-
-Request Discovery & API Mapping
+- backup workflow
+- HAR parsing
 
 
 
-Phase 5
+---
 
-Authentication Strategy
+## API Client
 
+
+Bertanggung jawab:
+
+
+- komunikasi API
+- request handling
+- response handling
+
+
+
+Tidak melakukan:
+
+
+- login decision
+- workflow business logic
+
+
+
+---
+
+## Backup
+
+
+Bertanggung jawab:
+
+
+- menjalankan proses backup
+- menggunakan API Client
+- menyimpan hasil backup
+
+
+
+Tidak melakukan:
+
+
+- membaca HAR langsung
+- authentication
+
+
+
+
+
+---
+
+# Phase Lifecycle Management
+
+
+## Phase Structure
+
+
+RCBT menggunakan struktur phase:
+
+
+Major Phase:
+
+
+Phase X
+
+
+
+Sub Phase:
+
+
+Phase X.Y
+
+
+
+Contoh:
 
 
 Phase 6
 
-API Client Implementation
+
+    |
+
+    +-- Phase 6.1 API Client Base
+
+
+    |
+
+    +-- Phase 6.2 Render Client
+
+
+    |
+
+    +-- Phase 6.3 Authentication Flow Discovery
 
 
 
-Current Target:
+---
+
+# Phase Status Definition
 
 
-Phase 7
+Setiap phase memiliki status:
 
-Backup Workflow Implementation
+
+PLANNING
+
+
+Belum dimulai.
+
+
+
+IN PROGRESS
+
+
+Sedang berjalan.
+
+
+
+BLOCKED
+
+
+Terhenti karena dependency atau masalah.
+
+
+
+COMPLETED
+
+
+Selesai dan sudah terdokumentasi.
+
+
+
+---
+
+# Current Phase Rule
+
+
+Status phase aktif tidak ditentukan dari CHAT_BOOTSTRAP.md.
+
+
+Sumber utama:
+
+
+docs/SESSION_CONTEXT.md
+
+
+
+SESSION_CONTEXT.md harus menjadi referensi:
+
+
+- phase aktif
+- sub phase aktif
+- task berjalan
+- blocker
+- next action
+
+
+
+---
+
+# Phase Completion Rule
+
+
+Major phase tidak boleh dianggap selesai jika masih ada sub phase yang belum selesai.
+
+
+
+Contoh:
+
+
+Phase 6:
+
+
+Status:
+
+IN PROGRESS
+
+
+
+Karena:
+
+
+Phase 6.3 Authentication Flow Discovery
+
+
+Status:
+
+IN PROGRESS
+
+
+
+---
+
+# Moving Phase Rule
+
+
+Tidak boleh pindah ke phase berikutnya sebelum:
+
+
+[ ] Semua sub phase selesai
+
+
+[ ] Testing selesai
+
+
+[ ] Error penting tercatat
+
+
+[ ] Technical decision tercatat
+
+
+[ ] History document dibuat
+
+
+[ ] SESSION_CONTEXT.md diperbarui
+
+
+
+---
 
 # Development Workflow
 
 
-## General Development Rule
-
-
-Setiap perubahan RCBT harus mengikuti workflow:
+Setiap perubahan mengikuti:
 
 
 Analysis
 
+
     |
 
+
     v
+
 
 Design Decision
 
+
     |
 
+
     v
+
 
 Implementation
 
+
     |
 
+
     v
+
 
 Testing
 
+
     |
 
+
     v
+
 
 Documentation
 
+
     |
 
+
     v
+
 
 Git Commit
 
@@ -433,345 +578,73 @@ Git Commit
 
 ---
 
-# Implementation Style
+# Implementation Execution Rule
 
 
-Saat memberikan perubahan code atau document:
+Jika tidak ada perubahan repository:
+
+
+Berikan:
+
+
+- analisa
+- penjelasan
+- keputusan teknis
+
+
+
+Jika membutuhkan perubahan repository:
+
+
+Berikan:
+
+
+- executable command
+- validation command
+- git command jika diperlukan
+
+
+
+---
+
+# File Modification Rule
+
+
+Untuk perubahan file:
 
 
 Prioritas:
 
 
-1. Command yang langsung dapat dijalankan.
+1. Python automation
 
 
-2. File generation menggunakan script.
+2. Python replacement
 
 
-3. Full replacement untuk perubahan besar.
+3. Full file generator
 
 
-4. Validation command setelah perubahan.
+4. Heredoc
 
 
 
 Hindari:
 
 
-- instruksi edit manual panjang
-- mencari nomor baris secara manual
-- copy paste potongan code ke tengah file
-- perubahan yang membutuhkan banyak cursor movement
+- nano untuk file panjang
+- edit cursor manual
+- mencari lokasi baris secara manual
+- copy paste block ke tengah file
 
 
 
 Tujuan:
 
 
+- reproducible
 - mengurangi human error
-- menjaga indentation
-- menjaga reproducibility
-- mempercepat workflow
-
-
-
----
-
-# File Modification Method
-
-
-Untuk perubahan file gunakan:
-
-
-## Small Change
-
-
-Gunakan:
-
-- Python replace
-- automated update script
-
-
-
-## Large Change
-
-
-Gunakan:
-
-
-- Python full file generator
-- heredoc
-- Part 1/x, Part 2/x
-
-
-
-Contoh workflow:
-
-
-Generate File
-
-
-    |
-
-    v
-
-
-Run Validation
-
-
-    |
-
-    v
-
-
-Commit
-
-
-
----
-
-# Documentation Writing Rule
-
-
-Dokumentasi adalah bagian dari development.
-
-
-Dokumentasi bukan pekerjaan tambahan setelah project selesai.
-
-
-
-Setiap perubahan besar harus memiliki:
-
-
-- alasan perubahan
-- implementasi
-- testing
-- impact
-- keputusan teknis
-
-
-
----
-
-# Phase Documentation Rule
-
-
-Setiap phase yang selesai wajib menghasilkan:
-
-
-docs/HISTORY/PHASE_<NUMBER>_<NAME>.md
-
-
-
-Dokumen phase harus berisi:
-
-
-## Overview
-
-
-Tujuan phase.
-
-
-
-## Objective
-
-
-Target yang ingin dicapai.
-
-
-
-## Implementation
-
-
-Apa yang dibuat.
-
-
-Meliputi:
-
-
-- module baru
-- perubahan file
-- workflow baru
-
-
-
-## Investigation
-
-
-Catatan investigasi:
-
-
-- data yang ditemukan
-- analisa API
-- hasil eksperimen
-- observasi penting
-
-
-
-## Error History
-
-
-Semua error penting dicatat:
-
-
-- error message
-- lokasi error
-- penyebab
-- solusi
-
-
-
-## Technical Decision
-
-
-Catatan keputusan:
-
-
-- problem
-- opsi solusi
-- keputusan final
-- alasan memilih solusi
-
-
-
-## Architecture Impact
-
-
-Perubahan terhadap:
-
-
-- module
-- workflow
-- dependency
-- responsibility
-
-
-
-## Testing Result
-
-
-Berisi:
-
-
-- command testing
-- hasil testing
-- validation status
-
-
-
-## Phase Result
-
-
-Status:
-
-
-COMPLETED
-
-
-
-## Next Phase
-
-
-Target development berikutnya.
-
-
-
----
-
-# Phase Memory Capture Rule
-
-
-Selama sebuah phase berjalan, semua informasi penting dianggap sebagai bagian dari engineering history.
-
-
-Yang harus diperhatikan:
-
-
-- error yang muncul
-- troubleshooting
-- percobaan yang dilakukan
-- solusi yang berhasil
-- solusi yang ditolak
-- keputusan design
-- perubahan arah development
-- kesepakatan architecture
-
-
-
-Tujuan:
-
-
-Agar ketika pindah chat, history engineering tetap tersedia.
-
-
-
----
-
-# AI Working Behavior
-
-
-Saat melanjutkan project:
-
-
-AI harus:
-
-
-- membaca context sebelum memberikan solusi
-- menjaga architecture existing
-- mengikuti keputusan sebelumnya
-- tidak mengulang investigasi lama
-- mempertahankan naming convention
-- menjaga backward compatibility
-
-
-
-AI tidak boleh:
-
-
-- mengubah struktur project tanpa diskusi
-- membuat module baru tanpa alasan
-- memindahkan responsibility antar module tanpa keputusan
-
-
-
----
-
-# Response Format For Implementation
-
-
-Untuk perubahan code:
-
-
-Gunakan format:
-
-
-📌 Phase X.X
-
-
-Update File
-
------------
-
-
-Command executable
-
-
-
-Validation
-
-----------
-
-
-Command test
-
-
-
-Git
-
----
-
-
-Command commit
+- menjaga konsistensi
 
 
 
@@ -780,72 +653,92 @@ Command commit
 # Long File Rule
 
 
-Jika file panjang:
-
-
-Gunakan:
+File panjang harus diberikan:
 
 
 Part 1/x
 
+
 Part 2/x
+
 
 Part 3/x
 
 
 
-Setiap part harus:
+Setiap part:
 
 
-- langsung dapat dipaste
+- langsung dapat dijalankan
 - memiliki urutan jelas
 - tidak membutuhkan edit manual
 
 
 
+
+
 ---
 
-# Current Development Preference
+# Documentation Automation Rule
 
 
-Preferred:
+Dokumentasi adalah bagian dari development.
 
 
-- terminal command
-- Python automation
-- reproducible change
-- explicit validation
-
-
-
-Avoid:
-
-
-- manual file editing
-- ambiguous instruction
-- partial modification tanpa context
-
-
-
-# Decision Management Rule
-
-
-## Purpose
-
-
-Setiap keputusan teknis harus memiliki alasan yang jelas.
-
-
-Keputusan tidak hanya menyimpan hasil akhir, tetapi juga proses berpikir yang menghasilkan keputusan tersebut.
+Dokumentasi bukan pekerjaan tambahan setelah coding selesai.
 
 
 
 ---
 
-# Decision Record
+# Phase Documentation Output
 
 
-Untuk keputusan penting gunakan:
+Setiap phase selesai wajib menghasilkan:
+
+
+## History Document
+
+
+Lokasi:
+
+
+docs/HISTORY/
+
+
+Format:
+
+
+PHASE_<NUMBER>_<NAME>.md
+
+
+
+Isi minimal:
+
+
+- Overview
+- Objective
+- Implementation
+- Investigation
+- Error History
+- Solution
+- Technical Decision
+- Architecture Impact
+- Testing Result
+- Phase Result
+- Next Phase
+
+
+
+---
+
+# Decision Documentation
+
+
+Keputusan architecture penting harus dicatat.
+
+
+Lokasi:
 
 
 docs/DECISIONS/
@@ -872,7 +765,7 @@ Masalah yang membutuhkan keputusan.
 ## Context
 
 
-Kondisi saat keputusan dibuat.
+Kondisi ketika keputusan dibuat.
 
 
 
@@ -886,14 +779,14 @@ Pilihan solusi yang dianalisa.
 ## Decision
 
 
-Solusi yang dipilih.
+Keputusan final.
 
 
 
 ## Reason
 
 
-Alasan pemilihan solusi.
+Alasan memilih keputusan tersebut.
 
 
 
@@ -912,10 +805,10 @@ Dampak terhadap:
 
 ---
 
-# Troubleshooting Documentation Rule
+# Troubleshooting Documentation
 
 
-Error penting harus disimpan.
+Error penting harus dicatat.
 
 
 Lokasi:
@@ -938,14 +831,14 @@ Isi:
 ## Error
 
 
-Pesan error yang muncul.
+Pesan error.
 
 
 
 ## Investigation
 
 
-Proses pencarian penyebab.
+Proses analisa.
 
 
 
@@ -959,442 +852,49 @@ Penyebab utama.
 ## Solution
 
 
-Perbaikan yang dilakukan.
+Perbaikan.
 
 
 
 ## Prevention
 
 
-Cara mencegah error yang sama.
+Cara mencegah masalah yang sama.
 
 
 
 ---
 
-# Engineering History Rule
+# Engineering Memory Rule
 
 
-History phase bukan hanya laporan hasil.
+Selama development phase berjalan, informasi penting harus dianggap sebagai engineering history.
 
 
-History harus menyimpan perjalanan engineering.
+Yang harus dicatat:
 
 
-Termasuk:
-
-
-- percobaan
-- investigasi
-- error
-- solusi
-- perubahan keputusan
-- alasan perubahan
+- error yang muncul
+- command troubleshooting
+- hasil investigasi
+- keputusan teknis
+- alternatif solusi
+- solusi yang ditolak
+- perubahan architecture
+- kesepakatan development
 
 
 
 Tujuan:
 
 
-Engineer lain atau chat baru dapat memahami kenapa sebuah keputusan dibuat.
+Agar chat baru atau engineer lain dapat memahami alasan sebuah keputusan dibuat.
 
 
 
 ---
 
-# Authentication Decision Rule
-
-
-Authentication harus tetap terpisah dari API Client.
-
-
-Flow:
-
-
-Credential
-
-
-    |
-
-
-    v
-
-
-Authentication Layer
-
-
-    |
-
-
-    v
-
-
-Session
-
-
-    |
-
-
-    v
-
-
-API Client
-
-
-
-API Client tidak boleh:
-
-
-- mengelola login
-- menyimpan credential
-- membuat authentication decision
-
-
-
----
-
-# API Communication Rule
-
-
-Semua komunikasi Ruijie Cloud harus melalui layer API Client.
-
-
-Flow:
-
-
-Application
-
-
-    |
-
-
-    v
-
-
-API Client
-
-
-    |
-
-
-    v
-
-
-Webproxy Gateway
-
-
-    |
-
-
-    v
-
-
-Internal API
-
-
-
-Tidak melakukan HTTP request langsung dari controller.
-
-
-
----
-
-# Parser Rule
-
-
-Parser hanya bertanggung jawab:
-
-
-- membaca data
-- normalisasi data
-- ekstraksi informasi
-
-
-
-Parser tidak:
-
-
-- melakukan authentication
-- melakukan API request
-- menjalankan backup
-
-
-
----
-
-# Workspace Rule
-
-
-Workspace bertanggung jawab:
-
-
-- project isolation
-- folder management
-- metadata project
-- lifecycle workspace
-
-
-
-Workspace tidak:
-
-
-- parsing
-- authentication
-- backup processing
-
-
-
----
-
-# Backup Workflow Rule
-
-
-Backup module bertanggung jawab:
-
-
-- menjalankan proses backup
-- menggunakan API Client
-- mengatur alur backup
-
-
-
-Backup module tidak:
-
-
-- membaca HAR langsung
-- melakukan login
-- mengetahui detail API internal
-
-
-
----
-
-# Testing Requirement
-
-
-Setiap perubahan code wajib memiliki validation.
-
-
-Minimal:
-
-
-Syntax validation:
-
-
-python -m py_compile <file>
-
-
-
-Import validation:
-
-
-PYTHONPATH=. python -c "from module import Class"
-
-
-
-Functional test jika diperlukan.
-
-
-
-Testing result harus masuk dokumentasi phase.
-
-# Phase Completion Checklist
-
-
-Sebuah phase hanya dianggap selesai jika semua kondisi terpenuhi.
-
-
-
-## Development
-
-
-[ ] Objective phase tercapai
-
-
-[ ] Implementation selesai
-
-
-[ ] Code sudah divalidasi
-
-
-[ ] Tidak ada unresolved error
-
-
-
----
-
-
-## Investigation
-
-
-[ ] Investigasi penting tercatat
-
-
-[ ] Temuan teknis dicatat
-
-
-[ ] API / workflow discovery dicatat jika ada
-
-
-
----
-
-
-## Documentation
-
-
-Wajib dibuat:
-
-
-[ ] docs/HISTORY/PHASE_<NUMBER>_<NAME>.md
-
-
-Jika ada keputusan penting:
-
-
-[ ] docs/DECISIONS/
-
-
-
-Jika ada error penting:
-
-
-[ ] docs/TROUBLESHOOTING/
-
-
-
----
-
-
-## Context Update
-
-
-Update:
-
-
-[ ] docs/SESSION_CONTEXT.md
-
-
-Berisi:
-
-
-- Current Phase
-- Completed Work
-- Last Achievement
-- Important Decision
-- Known Issue
-- Next Target
-
-
-
-Update:
-
-
-[ ] docs/CHAT_BOOTSTRAP.md
-
-
-Berisi:
-
-
-- Current Status
-- Completed Phase
-- Next Development Target
-
-
-
----
-
-
-# Git Workflow Rule
-
-
-Setiap phase memiliki milestone commit.
-
-
-
-Format:
-
-
-phase XX: <description>
-
-
-
-Contoh:
-
-
-phase 07: implement backup workflow
-
-
-
-Workflow:
-
-
-git status
-
-
-    |
-
-
-    v
-
-
-git add
-
-
-    |
-
-
-    v
-
-
-git commit
-
-
-    |
-
-
-    v
-
-
-git push
-
-
-
----
-
-# Chat Transfer Rule
-
-
-Ketika pindah chat:
-
-
-Jangan menjelaskan ulang seluruh history.
-
-
-Gunakan:
-
-
-docs/CHAT_BOOTSTRAP.md
-
-
-sebagai entry point.
-
-
-
-Chat baru harus memahami:
-
-
-- posisi terakhir project
-- phase aktif
-- architecture
-- keputusan sebelumnya
-- aturan development
-
-
-
----
-
-# AI Continuation Instruction
+# AI Continuation Rule
 
 
 Saat melanjutkan RCBT:
@@ -1404,29 +904,339 @@ AI harus:
 
 
 - membaca context terlebih dahulu
-- mengikuti architecture existing
+- memahami phase aktif
+- menjaga architecture existing
+- mengikuti keputusan sebelumnya
 - menjaga backward compatibility
-- menggunakan workflow yang sudah disepakati
-- membuat dokumentasi setelah phase selesai
-
-
-
-AI tidak boleh:
-
-
-- menghapus keputusan lama tanpa alasan
-- mengganti architecture secara sepihak
-- membuat implementasi tanpa validation
-- melewati dokumentasi phase
+- tidak mengulang investigasi yang sudah selesai
 
 
 
 ---
 
-# Final Project Principle
+# AI Response Rule
 
 
-RCBT dibangun sebagai production-grade toolkit.
+Jika hanya membutuhkan diskusi:
+
+
+Berikan:
+
+
+- analisa
+- pertimbangan
+- rekomendasi
+
+
+
+Jika membutuhkan perubahan repository:
+
+
+Berikan langsung:
+
+
+1. Action
+
+
+Create / Update / Replace
+
+
+
+2. File path
+
+
+
+3. Executable command
+
+
+
+4. Validation command
+
+
+
+5. Git command jika diperlukan
+
+
+
+---
+
+# Response Priority
+
+
+Urutan prioritas:
+
+
+1. Executable command
+
+
+2. Validation
+
+
+3. Git workflow
+
+
+4. Explanation
+
+
+
+Penjelasan diberikan jika:
+
+
+- ada keputusan architecture
+- ada tradeoff
+- ada risiko teknis
+- ada alasan perubahan
+
+
+
+---
+
+# Reproducible Change Rule
+
+
+Setiap perubahan harus dapat diulang dari terminal.
+
+
+Contoh:
+
+
+Create file:
+
+
+Python generator
+
+
+
+Update file:
+
+
+Python replacement
+
+
+
+Large document:
+
+
+Part based command
+
+
+
+Validation:
+
+
+Explicit test command
+
+
+
+
+
+---
+
+# Git Workflow Rule
+
+
+Setiap milestone development harus melalui Git workflow.
+
+
+
+Workflow:
+
+
+Check status:
+
+
+git status
+
+
+
+Stage:
+
+
+git add <file>
+
+
+
+Commit:
+
+
+git commit -m "<message>"
+
+
+
+Push:
+
+
+git push
+
+
+
+---
+
+# Commit Principle
+
+
+Commit harus menjelaskan perubahan.
+
+
+Contoh:
+
+
+phase 06.3: implement authentication client
+
+
+
+docs: update phase documentation
+
+
+
+fix: resolve session handling issue
+
+
+
+---
+
+# Chat Transfer Protocol
+
+
+Ketika pindah chat:
+
+
+Jangan menjelaskan ulang seluruh history secara manual.
+
+
+
+Upload:
+
+
+docs/CHAT_BOOTSTRAP.md
+
+
+docs/SESSION_CONTEXT.md
+
+
+dan history phase terakhir jika diperlukan.
+
+
+
+---
+
+# New Chat Startup Rule
+
+
+Chat baru harus memahami:
+
+
+1. Project identity
+
+
+2. Architecture existing
+
+
+3. Current phase
+
+
+4. Active task
+
+
+5. Previous decision
+
+
+6. Development workflow
+
+
+
+Sumber:
+
+
+CHAT_BOOTSTRAP.md
+
+
+untuk aturan.
+
+
+SESSION_CONTEXT.md
+
+
+untuk posisi terakhir.
+
+
+
+---
+
+# Phase Completion Final Checklist
+
+
+Sebelum phase dinyatakan COMPLETED:
+
+
+Development:
+
+
+[ ] Objective tercapai
+
+
+[ ] Implementation selesai
+
+
+[ ] Testing berhasil
+
+
+[ ] Tidak ada unresolved blocker
+
+
+
+Investigation:
+
+
+[ ] Investigasi tercatat
+
+
+[ ] Error tercatat
+
+
+[ ] Solution tercatat
+
+
+
+Documentation:
+
+
+[ ] HISTORY document dibuat
+
+
+[ ] DECISION document dibuat jika diperlukan
+
+
+[ ] TROUBLESHOOTING dibuat jika diperlukan
+
+
+
+Context:
+
+
+[ ] SESSION_CONTEXT.md diperbarui
+
+
+[ ] CHAT_BOOTSTRAP.md diperbarui jika ada perubahan workflow
+
+
+
+Git:
+
+
+[ ] Commit dibuat
+
+
+[ ] Push berhasil
+
+
+
+---
+
+# RCBT Engineering Principle
+
+
+RCBT dikembangkan sebagai production-grade toolkit.
 
 
 Prioritas:
@@ -1438,16 +1248,44 @@ Prioritas:
 2. Single Responsibility Principle
 
 
-3. Maintainability
+3. Modular Design
 
 
-4. Scalability
+4. Maintainability
 
 
-5. Reproducibility
+5. Scalability
 
 
-6. Complete Engineering Documentation
+6. Backward Compatibility
+
+
+7. Reproducible Development
+
+
+8. Complete Engineering Documentation
+
+
+
+---
+
+# Final Rule
+
+
+Jangan membuat perubahan hanya karena terlihat lebih mudah.
+
+
+Setiap perubahan harus mempertimbangkan:
+
+
+- architecture impact
+- maintenance impact
+- future scalability
+- backward compatibility
+
+
+
+RCBT harus tetap berkembang sebagai toolkit yang dapat digunakan untuk banyak project dan customer.
 
 
 
