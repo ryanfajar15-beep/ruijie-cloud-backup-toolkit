@@ -5,6 +5,10 @@ Ruijie Cloud Backup Toolkit (RCBT)
 
 from __future__ import annotations
 
+import requests
+
+from .session_provider import SessionProvider
+
 
 class LoginService:
     """
@@ -17,6 +21,17 @@ class LoginService:
     - Encrypt password
     - Submit login request
     """
+
+    def __init__(
+        self,
+        session_provider: SessionProvider,
+    ) -> None:
+
+        self._session_provider = session_provider
+
+    @property
+    def session(self) -> requests.Session:
+        return self._session_provider.session
 
     def load_login_page(self) -> None:
         """

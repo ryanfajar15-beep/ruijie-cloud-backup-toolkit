@@ -46,7 +46,9 @@ class AuthClient:
             or SessionProvider()
         )
 
-        self._login_service = LoginService()
+        self._login_service = LoginService(
+            self._session_provider
+        )
 
     @property
     def session(self) -> requests.Session:
@@ -130,7 +132,6 @@ class AuthClient:
         """
 
         return self.verify_session()
-
 
     def is_authenticated(self) -> bool:
         """
