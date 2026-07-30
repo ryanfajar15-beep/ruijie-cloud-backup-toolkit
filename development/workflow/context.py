@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 from .status import ProjectStatus
 from development.workspace.project_writer import ProjectWriter
+from development.config.credential import Credential
 
 import requests
 
@@ -51,6 +52,8 @@ class WorkflowContext:
 
     # Authentication
     session: requests.Session | None = None
+
+    credential: Credential | None = None
 
     # Project information
     project_status: ProjectStatus = ProjectStatus.CREATED

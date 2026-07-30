@@ -45,28 +45,88 @@ class AuthClient:
         """Return active requests session."""
         return self._session_provider.session
 
-    def login(self, username: str, password: str) -> AuthenticationResult:
+    def login(
+        self,
+        username: str,
+        password: str,
+    ) -> AuthenticationResult:
         """
         Perform authentication.
-
-        NOTE:
-        Actual login implementation will be completed after
-        RSA Provider and Encryptor are integrated.
         """
 
         if not username:
-            raise LoginFailedError("Username is empty.")
+            raise LoginFailedError(
+                "Username is empty."
+            )
 
         if not password:
-            raise LoginFailedError("Password is empty.")
+            raise LoginFailedError(
+                "Password is empty."
+            )
 
-        return AuthenticationResult(
-            status=AuthenticationStatus.READY,
-            success=True,
-            message="Authentication successful.",
-            session=self.session,
-            username=username,
+        self.load_login_page()
+
+        public_key = self.get_rsa_key()
+
+        encrypted_password = self.encrypt_password(
+            password=password,
+            public_key=public_key,
         )
+
+        self.submit_login(
+            username=username,
+            encrypted_password=encrypted_password,
+        )
+
+        return self.verify_session()
+
+    def load_login_page(self) -> None:
+        """
+        Load login page.
+
+        TODO:
+        Implement in Phase 7.3.
+        """
+
+        raise NotImplementedError
+
+    def get_rsa_key(self) -> str:
+        """
+        Retrieve RSA public key.
+
+        TODO:
+        Implement in Phase 7.4.
+        """
+
+        raise NotImplementedError
+
+    def encrypt_password(
+        self,
+        password: str,
+        public_key: str,
+    ) -> str:
+        """
+        Encrypt password.
+
+        TODO:
+        Implement in Phase 7.5.
+        """
+
+        raise NotImplementedError
+
+    def submit_login(
+        self,
+        username: str,
+        encrypted_password: str,
+    ) -> None:
+        """
+        Submit login request.
+
+        TODO:
+        Implement in Phase 7.6.
+        """
+
+        raise NotImplementedError
 
     def logout(self) -> AuthenticationResult:
         """

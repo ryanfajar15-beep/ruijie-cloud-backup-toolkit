@@ -11,6 +11,8 @@ from development.workspace.workspace import Workspace
 from .status import ProjectStatus
 from development.workspace.project_writer import ProjectWriter
 from development.workspace.project_info import ProjectInfo
+from development.auth.auth_client import AuthClient
+from development.auth.exceptions import AuthenticationError
 
 from .context import WorkflowContext
 from .models import (
@@ -31,6 +33,8 @@ class BackupWorkflow:
         context: WorkflowContext,
     ):
         self.context = context
+
+        self.auth_client = AuthClient()
 
     # -------------------------------------------------
 
@@ -233,9 +237,26 @@ class BackupWorkflow:
             ProjectStatus.AUTHENTICATING
         )
 
-        # TODO: Authentication implementation
+        credential = self.context.credential
 
-        pass
+        if credential is None:
+
+            raise AuthenticationError(
+                "Credential has not been provided."
+            )
+
+        result = self.auth_client.login(
+            credential.username,
+            credential.password,
+        )
+
+        if not result.success:
+
+            raise AuthenticationError(
+                result.message
+            )
+
+        self.context.session = result.session
 
     # -------------------------------------------------
 
