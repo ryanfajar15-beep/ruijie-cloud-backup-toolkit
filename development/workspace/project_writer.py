@@ -27,6 +27,7 @@ import json
 from pathlib import Path
 
 
+
 VERSION = "5.0.0"
 
 
@@ -41,7 +42,6 @@ class ProjectWriter:
             project_file
         )
 
-
     # -------------------------------------------------
 
     def write(
@@ -50,17 +50,51 @@ class ProjectWriter:
     ):
         """
         Write project metadata.
-
-        Parameters
-        ----------
-        metadata : dict
-            Project information.
         """
 
         self.project_file.parent.mkdir(
             parents=True,
             exist_ok=True,
         )
+
+        with self.project_file.open(
+            "w",
+            encoding="utf-8",
+        ) as file:
+
+            json.dump(
+                metadata,
+                file,
+                indent=4,
+                ensure_ascii=False,
+            )
+
+        return self.project_file
+
+    # -------------------------------------------------
+
+    def update_status(
+        self,
+        status: str,
+    ):
+        """
+        Update project status inside project.json.
+        """
+
+        if not self.project_file.exists():
+
+            raise FileNotFoundError(
+                self.project_file
+            )
+
+        with self.project_file.open(
+            "r",
+            encoding="utf-8",
+        ) as file:
+
+            metadata = json.load(file)
+
+        metadata["status"] = status
 
         with self.project_file.open(
             "w",

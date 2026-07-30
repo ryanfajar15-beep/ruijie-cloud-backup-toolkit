@@ -1,0 +1,136 @@
+"""
+Authentication Client
+Ruijie Cloud Backup Toolkit (RCBT)
+"""
+
+from __future__ import annotations
+
+from typing import Optional
+
+import requests
+
+from .exceptions import (
+    AuthenticationError,
+    LoginFailedError,
+    NetworkError,
+    SessionExpiredError,
+)
+from .models import AuthenticationResult, AuthenticationStatus
+from .session_provider import SessionProvider
+
+
+class AuthClient:
+    """
+    Main authentication client.
+
+    Responsibilities
+    ----------------
+    - Login
+    - Logout
+    - Verify Session
+    - Refresh Session
+    """
+
+    def __init__(
+        self,
+        session_provider: Optional[SessionProvider] = None,
+        timeout: int = 30,
+    ) -> None:
+
+        self._timeout = timeout
+        self._session_provider = session_provider or SessionProvider()
+
+    @property
+    def session(self) -> requests.Session:
+        """Return active requests session."""
+        return self._session_provider.session
+
+    def login(self, username: str, password: str) -> AuthenticationResult:
+        """
+        Perform authentication.
+
+        NOTE:
+        Actual login implementation will be completed after
+        RSA Provider and Encryptor are integrated.
+        """
+
+        if not username:
+            raise LoginFailedError("Username is empty.")
+
+        if not password:
+            raise LoginFailedError("Password is empty.")
+
+        return AuthenticationResult(
+            status=AuthenticationStatus.READY,
+            success=True,
+            message="Authentication successful.",
+            session=self.session,
+            username=username,
+        )
+
+    def logout(self) -> AuthenticationResult:
+        """
+        Logout current session.
+        """
+
+        self.session.cookies.clear()
+
+        return AuthenticationResult(
+            status=AuthenticationStatus.INIT,
+            success=True,
+            message="Logout successful.",
+        )
+
+    def verify_session(self) -> AuthenticationResult:
+        """
+        Verify whether session is still valid.
+
+        Placeholder implementation.
+        """
+
+        if self.session is None:
+            raise SessionExpiredError("Session not available.")
+
+        return AuthenticationResult(
+            status=AuthenticationStatus.READY,
+            success=True,
+            message="Session verified.",
+            session=self.session,
+        )
+
+    def refresh_session(self) -> AuthenticationResult:
+        """
+        Refresh session.
+
+        Placeholder implementation.
+        """
+
+        return self.verify_session()
+
+
+    def is_authenticated(self) -> bool:
+        """
+        Check whether current session is authenticated.
+
+        Returns
+        -------
+        bool
+            True if session is available.
+        """
+
+        return self.session is not None
+
+    def get_session(self) -> requests.Session:
+        """
+        Return current authenticated session.
+        """
+
+        return self.session
+
+    @property
+    def timeout(self) -> int:
+        """
+        Request timeout (seconds).
+        """
+
+        return self._timeout
