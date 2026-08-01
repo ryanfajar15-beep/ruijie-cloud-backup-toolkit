@@ -38,11 +38,12 @@ Stage 1 — API Catalog Discovery
 Stage 2 — Authentication Metadata
 ---------------------------------
 
-[ ] Login Page Metadata
-[ ] RSA Metadata
-[ ] Hidden Fields Metadata
-[ ] Password Validation Metadata
-[ ] Login Request Metadata
+[x] Login Page Metadata
+[x] RSA Metadata
+[x] Hidden Fields Metadata
+[x] Password Validation Metadata
+[x] Login Request Metadata
+[x] Domain Discovery
 [ ] Session Cookie Metadata
 [ ] Session Validation Metadata
 [ ] Redirect Flow Metadata
