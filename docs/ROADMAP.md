@@ -1,44 +1,117 @@
-# Roadmap
+# RCBT Roadmap
 
-## ✅ Phase 1 — Project Bootstrap
-Status: Completed
+This roadmap defines the long-term engineering direction of the Ruijie Cloud Backup Toolkit (RCBT).
 
-Membangun fondasi project.
-
----
-
-## ✅ Phase 2 — Workspace Manager
-Status: Completed
-
-Workspace lifecycle.
+Each phase represents a major engineering milestone. New phases should be added only after the current phase has been successfully completed.
 
 ---
 
-## ✅ Phase 3 — HAR Import & Parser
-Status: Completed
+# Phase 1 — Project Bootstrap
 
-Import HAR dan parsing request.
+Status
 
----
+✅ Completed
 
-## ✅ Phase 4 — Request Discovery
-Status: Completed
+Objective
 
-Request classification, endpoint discovery, catalog generation.
+Establish the initial project foundation.
 
----
+Deliverables
 
-## ✅ Phase 5 — Authentication Strategy
-Status: Completed
-
-Authentication architecture dan login workflow.
+- Repository Structure
+- Development Environment
+- Documentation Foundation
+- Initial Project Configuration
 
 ---
 
-## ✅ Phase 6 — API Client Implementation
-Status: Completed
+# Phase 2 — Workspace
 
-Deliverables:
+Status
+
+✅ Completed
+
+Objective
+
+Build the Workspace infrastructure responsible for project lifecycle management.
+
+Deliverables
+
+- Workspace Initialization
+- Project Lifecycle Management
+- HAR Input Management
+- Project Directory Structure
+
+---
+
+# Phase 3 — HAR Import & Parser
+
+Status
+
+✅ Completed
+
+Objective
+
+Import HAR files into the Workspace and transform captured traffic into structured requests.
+
+Deliverables
+
+- HAR Importer
+- HAR Parser
+- Request Reader
+- Parsed Request Model
+
+---
+
+# Phase 4 — Request Discovery
+
+Status
+
+✅ Completed
+
+Objective
+
+Analyze parsed requests and establish the Discovery foundation.
+
+Deliverables
+
+- Request Classification
+- Endpoint Discovery
+- Request Catalog
+- Initial Discovery Metadata
+
+---
+
+# Phase 5 — Authentication Strategy
+
+Status
+
+✅ Completed
+
+Objective
+
+Design the authentication architecture required for Runtime execution.
+
+Deliverables
+
+- Authentication Architecture
+- Login Workflow
+- Session Strategy
+- Authentication Design
+
+---
+
+# Phase 6 — API Runtime Foundation
+
+Status
+
+✅ Completed
+
+Objective
+
+Build the Runtime foundation required to execute discovered application behavior.
+
+Deliverables
 
 - Authentication Runtime
 - Session Provider
@@ -46,26 +119,32 @@ Deliverables:
 - Auth Client
 - Credential Management
 - Endpoint Configuration Foundation
-- API Runtime Foundation
+- Runtime Layer Foundation
 - Workflow Foundation
-- Runtime Architecture Stabilization
 
 ---
 
-# 🚧 Phase 7 — Discovery Engine
+# Phase 7 — Discovery Engine
 
-Status: In Progress
+Status
+
+🚧 In Progress
 
 Objective
 
-Menyelesaikan seluruh proses reverse engineering sehingga runtime
-tidak lagi bergantung langsung terhadap HAR.
+Complete the reverse engineering process so that the Runtime Layer no longer depends directly on HAR files.
 
-Sub Phase
+---
 
-### Phase 7.0
+## Phase 7.0 — Discovery Finalization
 
-Discovery Finalization
+Status
+
+🚧 In Progress
+
+Objective
+
+Complete all Discovery components.
 
 Target
 
@@ -84,46 +163,94 @@ Target
 
 Output
 
+```text
 analysis/
+```
 
 ---
 
-### Phase 7.1
+## Phase 7.1 — Knowledge Engine
 
-Knowledge Engine
+Status
 
-Target
+Planned
 
-Membangun Knowledge Layer sebagai source of truth runtime.
+Objective
+
+Build the Knowledge Layer as the primary engineering knowledge source consumed by the Runtime Layer.
 
 Output
 
+```text
 development/knowledge/
+```
 
 ---
 
-### Phase 7.2
+## Phase 7.2 — Runtime Integration
 
-Runtime Integration
+Status
 
-Target
+Planned
 
-Mengintegrasikan seluruh runtime dengan Knowledge Engine.
+Objective
+
+Integrate the Runtime Layer with the Knowledge Engine.
+
+Output
+
+- Integrated Runtime Layer
+- Knowledge-driven Execution
+- Runtime Validation
 
 ---
 
-### Phase 7.3
+## Phase 7.3 — Production Optimization
 
-Production Optimization
+Status
+
+Planned
+
+Objective
+
+Prepare the toolkit for production deployment.
 
 Target
 
-Hardening.
+- Runtime Hardening
+- Performance Optimization
+- Comprehensive Testing
+- Documentation Finalization
+- Production Readiness
 
-Optimization.
+---
 
-Testing.
+# Future Phases
 
-Performance.
+Future phases will be defined after successful completion of Phase 7 based on engineering priorities, architectural evolution, and project requirements.
 
-Documentation.
+---
+
+# Roadmap Maintenance Policy
+
+This roadmap should be updated only when one or more of the following changes occur:
+
+- A new phase is introduced.
+- A phase is completed.
+- Engineering priorities change.
+- Major architectural milestones are added.
+- Project direction changes.
+
+Routine implementation work must not require modifications to this document.
+
+---
+
+# Document Status
+
+| Item | Value |
+|------|-------|
+| Version | 3.0 |
+| Status | Active |
+| Classification | Engineering Roadmap |
+| Maintained By | Project Owner |
+| Source of Truth | Repository |

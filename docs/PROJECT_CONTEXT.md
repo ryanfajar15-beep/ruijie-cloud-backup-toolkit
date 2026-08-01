@@ -1,12 +1,12 @@
 # PROJECT_CONTEXT.md
 
-> **Single Source of Truth (SSOT)**
+### Single Source of Truth (SSOT)
 >
-> This document defines the complete engineering context for the Ruijie Cloud Backup Toolkit (RCBT).
+> This document defines the long-term engineering identity, architecture, design philosophy, engineering standards, governance, and implementation principles of the Ruijie Cloud Backup Toolkit (RCBT).
 >
-> It serves as the authoritative reference for architecture, implementation, workflow, engineering standards, development philosophy, and future roadmap.
+> Unlike SESSION_CONTEXT.md, this document intentionally excludes temporary development status, active tasks, current phases, Git metadata, roadmap progress, and other frequently changing information.
 >
-> Every implementation, documentation update, refactoring, and architectural decision must remain consistent with this document unless superseded by an approved Architecture Decision Record (ADR).
+> PROJECT_CONTEXT.md should remain stable and evolve only when the project's architecture, engineering philosophy, or long-term design changes.
 
 ---
 
@@ -17,809 +17,793 @@
 | Document | PROJECT_CONTEXT.md |
 | Project | Ruijie Cloud Backup Toolkit (RCBT) |
 | Document Type | Engineering Context Document |
-| Status | Active |
-| Version | 1.0 |
-| Repository | ruijie-cloud-backup-toolkit |
+| Status | FREZZE |
+| Version | 2.0 |
 | Language | English |
-| Audience | Project Owner, Software Engineers, Future Contributors, AI Assistants |
+| Audience | Project Owner, Software Engineers, AI Assistants, Future Contributors |
 | Priority | Highest |
 
 ---
 
-# 2. Purpose
+# 2. Document Responsibility
 
-PROJECT_CONTEXT.md is the highest-level engineering document of the project.
+PROJECT_CONTEXT.md defines the long-term engineering identity of the project.
 
-Unlike README, ROADMAP, CHANGELOG, or TODO documents, this document captures the complete engineering knowledge required to understand, continue, maintain, and extend the project without depending on historical conversations.
+This document is intended to remain stable throughout the project lifecycle.
 
-The objectives of this document are:
+It describes:
 
+- Engineering philosophy
+- Architecture
+- Design principles
+- Module responsibilities
+- Engineering standards
+- Development workflow
+- Architecture Decision Records (ADR)
+- Long-term engineering guidelines
+
+This document intentionally does **NOT** store frequently changing information.
+
+The following information belongs to other documents:
+
+| Information | Document |
+|------------|----------|
+| Current Phase | SESSION_CONTEXT.md |
+| Current Task | SESSION_CONTEXT.md |
+| Current Milestone | SESSION_CONTEXT.md |
+| Git Metadata | SESSION_CONTEXT.md |
+| Roadmap Progress | ROADMAP.md |
+| Completed Work | CHANGELOG.md |
+| Active Tasks | TODO.md |
+| Phase History | HISTORY/ |
+| Architecture Decisions | DECISIONS/ |
+| Troubleshooting | TROUBLESHOOTING/ |
+
+Whenever information changes frequently, it should not be stored in PROJECT_CONTEXT.md.
+
+---
+
+# 3. Purpose
+
+PROJECT_CONTEXT.md provides the engineering foundation of the Ruijie Cloud Backup Toolkit.
+
+Its primary purpose is to preserve architectural consistency throughout the lifetime of the project.
+
+Unlike implementation documentation, this document focuses on long-term engineering knowledge rather than temporary development activities.
+
+The objectives are:
+
+- Preserve engineering philosophy.
 - Preserve architectural consistency.
-- Preserve engineering decisions.
-- Preserve implementation philosophy.
-- Eliminate ambiguity.
-- Reduce onboarding time.
-- Define project boundaries.
+- Preserve implementation principles.
+- Preserve module responsibilities.
 - Prevent architecture drift.
-- Ensure future development follows the established design.
+- Define project boundaries.
+- Reduce onboarding time.
+- Support future contributors.
+- Support AI-assisted development.
+- Ensure long-term maintainability.
 
-Whenever implementation conflicts with this document, the conflict must be resolved before coding continues.
-
----
-
-# 3. Project Overview
-
-Ruijie Cloud Backup Toolkit (RCBT) is a modular Python application designed to reverse engineer, analyze, backup, restore, and document Ruijie Cloud resources through structured API discovery.
-
-The project starts from a HAR (HTTP Archive) file exported from Ruijie Cloud.
-
-Rather than functioning as a simple backup script, RCBT is designed as an engineering platform capable of understanding Ruijie Cloud communication and converting captured browser sessions into reproducible backup artifacts.
-
-The toolkit is intended to support:
-
-- HAR analysis
-- API discovery
-- Authentication discovery
-- API catalog generation
-- Cloud resource backup
-- Configuration restore
-- Report generation
-- Future automation
-
-The project emphasizes long-term maintainability over rapid implementation.
+Whenever implementation conflicts with this document, the conflict should be reviewed before implementation continues.
 
 ---
 
-# 4. Vision
+# 4. Project Overview
 
-Create a production-grade toolkit capable of completely understanding Ruijie Cloud communication while providing reliable backup and restore capabilities through a clean, modular, and maintainable architecture.
+Ruijie Cloud Backup Toolkit (RCBT) is a production-grade engineering toolkit designed to understand, analyze, and automate Ruijie Cloud operations through structured reverse engineering.
 
-RCBT is intended to become an engineering platform rather than a collection of independent scripts.
+The project began with HAR (HTTP Archive) analysis but has evolved into a modular engineering platform capable of discovering application behavior and transforming that knowledge into reusable runtime components.
+
+RCBT is not intended to be a simple backup script.
+
+Instead, it provides a structured engineering platform capable of:
+
+- Reverse engineering Ruijie Cloud communication.
+- Discovering authentication mechanisms.
+- Building structured API knowledge.
+- Managing cloud backup operations.
+- Supporting future restore workflows.
+- Generating engineering reports.
+- Providing reusable runtime components.
+
+The project prioritizes long-term maintainability over rapid implementation.
 
 ---
 
-# 5. Engineering Philosophy
+# 5. Vision
 
-The project follows several engineering principles.
+Create a production-grade engineering platform capable of completely understanding Ruijie Cloud communication while providing reliable, maintainable, and extensible backup automation.
 
-## 5.1 Architecture First
+The project aims to evolve beyond a backup utility into a reusable toolkit suitable for multiple customers, projects, and future cloud automation initiatives.
+
+---
+
+# 6. Engineering Philosophy
+
+RCBT follows several long-term engineering principles.
+
+## 6.1 Architecture First
 
 Architecture always has higher priority than implementation speed.
 
-Temporary solutions that compromise long-term maintainability should be avoided.
+Short-term solutions must never compromise long-term maintainability.
 
 ---
 
-## 5.2 Modular Design
+## 6.2 Single Responsibility
 
-Every module must solve exactly one problem.
+Every module owns one responsibility.
 
-Responsibilities should never overlap.
+Responsibilities must never overlap.
 
-Business logic should never be duplicated.
+Business logic must remain isolated.
 
 ---
 
-## 5.3 Separation of Concerns
+## 6.3 Separation of Concerns
 
-Filesystem,
+Filesystem management,
 HAR parsing,
-authentication discovery,
-API discovery,
+authentication,
+API communication,
 backup,
-restore,
-report generation,
+reporting,
+and exporting
 
 must remain independent.
 
-Each module communicates only through well-defined outputs.
+Each subsystem communicates only through well-defined inputs and outputs.
 
 ---
 
-## 5.4 Reusability
+## 6.4 Maintainability First
 
-Every module should be reusable by future components.
+Readable, predictable, and maintainable code is preferred over clever or highly optimized implementations.
 
-Modules must avoid unnecessary dependencies.
-
----
-
-## 5.5 Incremental Development
-
-The project is developed through small, testable phases.
-
-Each completed phase becomes the stable foundation for the next phase.
+Engineering consistency always takes precedence over implementation shortcuts.
 
 ---
 
-## 5.6 Documentation Driven Development
+## 6.5 Incremental Engineering
+
+Development progresses through small, validated, and documented phases.
+
+Each completed phase becomes the stable foundation for subsequent work.
+
+---
+
+## 6.6 Documentation-Driven Engineering
 
 Documentation is considered part of the implementation.
 
-Architecture decisions must be documented before significant implementation changes.
+Major engineering decisions should be documented before significant implementation changes.
 
 ---
 
-## 5.7 Git Driven Development
+## 6.7 Git-Driven Development
 
-Every significant milestone should be preserved through Git commits.
+Every significant engineering milestone should be preserved through Git.
 
-Major project milestones should be marked using Git tags.
+Meaningful commits provide historical traceability and support long-term maintenance.
 
 ---
 
-# 6. Project Goals
+## 6.8 Production-Grade Quality
 
-The primary goals are:
+Every implementation should be designed with production quality in mind.
 
-- Analyze HAR files.
-- Discover HTTP API endpoints.
-- Extract authentication information.
-- Build an API catalog.
-- Download Ruijie Cloud resources.
-- Backup project configurations.
-- Restore backed-up configurations.
-- Generate structured reports.
-- Support multiple independent projects.
+Temporary prototypes, experimental shortcuts, and project-specific hacks should be avoided whenever possible.
+
+---
+
+# End of Part 1
+
+# 7. Project Goals
+
+RCBT is developed as a long-term engineering platform rather than a single-purpose automation script.
+
+The primary goals of the project are:
+
+- Understand Ruijie Cloud communication.
+- Reverse engineer undocumented APIs.
+- Build structured API knowledge.
+- Discover authentication workflows.
+- Generate reusable endpoint metadata.
+- Execute reliable backup operations.
+- Support future restore capabilities.
+- Produce engineering-grade reports.
+- Support multiple independent customer projects.
 - Maintain production-grade engineering quality.
 
+Every implementation should contribute toward these goals.
+
 ---
 
-# 7. Non-Goals
+# 8. Project Scope
 
-The project intentionally avoids:
+RCBT focuses exclusively on engineering activities related to Ruijie Cloud.
 
-- Monolithic architecture.
-- Hardcoded project-specific logic.
+The project scope includes:
+
+- HAR analysis.
+- HTTP request analysis.
+- Authentication discovery.
+- API discovery.
+- API relationship mapping.
+- Runtime metadata generation.
+- Cloud resource backup.
+- Future restore workflow.
+- Structured reporting.
+- Engineering documentation.
+- Runtime automation.
+
+The project is intended to become the engineering foundation for future Ruijie Cloud automation.
+
+---
+
+# 9. Non-Goals
+
+To preserve architectural consistency, several items are intentionally excluded.
+
+RCBT is **not** intended to become:
+
+- A monolithic application.
+- A collection of independent scripts.
+- A GUI-first application.
+- A one-off customer project.
+- A manually operated workflow.
+- A hardcoded automation script.
+- A project-specific implementation.
+- A replacement for official Ruijie Cloud services.
+
+The following practices should also be avoided:
+
+- Hardcoded endpoints.
+- Hardcoded credentials.
+- Business logic duplication.
 - Tight coupling between modules.
-- Direct filesystem manipulation by parser modules.
-- Temporary prototype implementations.
-- Manual project organization.
-- Features outside the documented roadmap.
+- Hidden dependencies.
+- Direct filesystem manipulation outside Workspace.
+- Architecture changes without documentation.
 
 ---
 
-# 8. Current Project Status
+# 10. Engineering Objectives
 
-| Item | Value |
-|------|-------|
-| Status | Active Development |
-| Current Version | v0.4.0-dev |
-| Current Sprint | Sprint 2 |
-| Current Phase | Phase 3.5.5 |
-| Current Focus | Main Controller Refactoring |
-| Current Entry Point | backup.py |
-| Repository | GitHub |
-| Documentation | Active |
-| Workspace System | Designed |
-| Parser | Versioned |
+The engineering objectives guide every architectural decision throughout the project lifecycle.
+
+The objectives are listed by priority.
+
+## 10.1 Architectural Consistency
+
+Maintain a predictable and modular architecture throughout the project.
+
+Every implementation should reinforce the existing architecture rather than bypass it.
 
 ---
 
-# 9. Current Development Position
+## 10.2 Maintainability
 
-## Completed
+The project should remain understandable after years of development.
 
-- Git repository initialized.
-- GitHub repository connected.
-- Documentation structure established.
-- HAR parser implemented.
-- Request discovery completed.
-- Request catalog generation completed.
-- Authentication discovery prototype completed.
-- Workspace architecture designed.
-- Project directory structure finalized.
+Readable code is preferred over compact code.
+
+Predictable behavior is preferred over implicit behavior.
 
 ---
 
-## In Progress
+## 10.3 Reusability
 
-- Refactor backup.py into the Main Controller.
-- Integrate Workspace Manager.
-- Transition from parser-oriented execution to workspace-oriented execution.
+Every module should be reusable by future modules.
 
----
-
-## Next Milestone
-
-Workspace-driven project lifecycle.
+Business logic should never depend on project-specific assumptions.
 
 ---
 
-# 10. High-Level System Architecture
+## 10.4 Scalability
 
-The system follows a sequential execution pipeline.
+The architecture should support future expansion without requiring major redesign.
 
-```text
-Incoming HAR
-      │
-      ▼
-Workspace Manager
-      │
-      ▼
-Project Initialization
-      │
-      ▼
-HAR Parser
-      │
-      ▼
-Request Discovery
-      │
-      ▼
-Authentication Discovery
-      │
-      ▼
-API Discovery
-      │
-      ▼
-Backup Engine
-      │
-      ▼
-Report Generator
-      │
-      ▼
-Restore Engine
-```
+New functionality should integrate into the existing architecture through well-defined interfaces.
 
-Each stage produces structured artifacts consumed by the next stage.
+---
 
-No module should bypass previous stages.
+## 10.5 Reliability
 
-No module should directly manipulate downstream components.
+Every execution should produce deterministic and reproducible results.
+
+Unexpected behavior should be minimized through explicit workflows and validation.
+
+---
+
+## 10.6 Extensibility
+
+Future modules should integrate without requiring changes to existing components whenever practical.
+
+Examples include:
+
+- Restore Engine
+- Knowledge Engine
+- Plugin System
+- Scheduler
+- Web Dashboard
+- Cloud Synchronization
 
 ---
 
 # 11. Core Design Principles
 
-The entire project follows these engineering principles:
+The architecture follows several long-term design principles.
 
-- Single Responsibility Principle (SRP)
-- Clean Architecture
-- Dependency Direction
-- Explicit Data Flow
-- Modular Design
-- Logging First
-- Reusable Components
-- Versioned Development
-- Incremental Delivery
-- Git-Driven Development
-- Documentation-Driven Development
-- Maintainability First
-- Production-Oriented Design
+## 11.1 One Entry Point
 
----
+Application execution begins from a single entry point.
 
-# End of Part 1
----
-
-# 12. Architecture Decision Records (ADR)
-
-This section records the major architectural decisions that define the project.
-
-Only final and accepted decisions are documented here.
-
-Any future architectural modification that changes one of these decisions must update this section before implementation.
-
----
-
-## ADR-001 — Main Controller
-
-**Status**
-
-Accepted
-
-**Decision**
-
-`backup.py` is the single entry point of the application.
-
-Every execution starts from `backup.py`.
-
-No other module may act as the application entry point.
-
-**Reason**
-
-A single entry point simplifies:
-
-- execution flow
-- dependency management
-- logging
-- configuration loading
-- future CLI implementation
-
-It also prevents duplicated startup logic.
-
-**Impact**
-
-- All modules become callable components.
-- The application has one predictable execution flow.
-- Future CLI implementation becomes straightforward.
-
----
-
-## ADR-002 — Workspace Owns Filesystem
-
-**Status**
-
-Accepted
-
-**Decision**
-
-Only the Workspace subsystem may create, rename, move, or organize project directories.
-
-No parser, discovery, backup, or exporter module may directly manipulate the filesystem structure.
-
-**Reason**
-
-Filesystem management is an infrastructure concern.
-
-Business modules should remain independent from directory structures.
-
-Separating these responsibilities improves maintainability and testability.
-
-**Impact**
-
-- Parser becomes reusable.
-- Backup engine remains independent.
-- Export modules remain independent.
-- Workspace becomes the infrastructure layer.
-
----
-
-## ADR-003 — Parser Must Remain Pure
-
-**Status**
-
-Accepted
-
-**Decision**
-
-Parser modules are responsible only for reading and interpreting HAR files.
-
-Parser modules must never:
-
-- create folders
-- move files
-- generate project structures
-- perform backup operations
-
-**Reason**
-
-The parser should remain reusable by future modules and testing tools.
-
-Keeping the parser pure minimizes dependencies and simplifies testing.
-
-**Impact**
-
-- Parser can be reused independently.
-- Workspace handles infrastructure.
-- Business logic remains isolated.
-
----
-
-## ADR-004 — Incoming Directory
-
-**Status**
-
-Accepted
-
-**Decision**
-
-Every HAR file must first be placed inside the `incoming/` directory.
-
-Example:
+Current implementation:
 
 ```text
-incoming/
-    padang_padang.har
+backup.py
 ```
 
-The application automatically detects HAR files located in this directory.
-
-**Reason**
-
-The user should only need to provide a HAR file.
-
-Manual project creation is unnecessary.
-
-This design minimizes operational complexity.
-
-**Impact**
-
-User workflow becomes:
-
-1. Export HAR.
-2. Copy HAR into `incoming/`.
-3. Run `python3 backup.py`.
-
-Nothing else is required.
+No module may replace the application entry point.
 
 ---
 
-## ADR-005 — Automatic Workspace Creation
+## 11.2 One Execution Pipeline
 
-**Status**
+Every execution follows the same workflow.
 
-Accepted
+The execution pipeline must remain deterministic.
 
-**Decision**
-
-For every HAR file discovered inside `incoming/`, the application automatically creates a project workspace.
-
-Example:
-
-```text
-projects/
-└── 20260729_padang_padang/
-```
-
-The original HAR file is moved into the project workspace.
-
-**Reason**
-
-Each backup should become an isolated project.
-
-Keeping every execution independent simplifies future restore operations and reporting.
-
-**Impact**
-
-Multiple backups can coexist safely.
-
-Each workspace becomes self-contained.
+Modules must never bypass mandatory stages.
 
 ---
 
-## ADR-006 — Standard Project Structure
+## 11.3 One Responsibility
 
-**Status**
+Every module owns one responsibility.
 
-Accepted
-
-**Decision**
-
-Every project workspace must follow the same directory layout.
-
-```text
-projects/
-└── <project_name>/
-    ├── project.json
-    ├── input/
-    │   └── session.har
-    ├── output/
-    ├── report/
-    └── logs/
-```
-
-**Reason**
-
-A predictable structure simplifies:
-
-- automation
-- debugging
-- backup
-- restore
-- report generation
-
-Future modules can rely on stable paths.
+Business logic duplication is prohibited.
 
 ---
 
-## ADR-007 — Project Metadata
+## 11.4 Explicit Data Flow
 
-**Status**
+Every module communicates through explicit inputs and outputs.
 
-Accepted
+Hidden dependencies should be avoided.
 
-**Decision**
-
-Each project contains a `project.json` file describing project metadata.
-
-Typical information includes:
-
-- project id
-- project name
-- creation timestamp
-- source HAR
-- application version
-- execution status
-
-**Reason**
-
-Project metadata should be separated from implementation artifacts.
-
-This enables future indexing, searching, and project management.
+Global mutable state should be minimized.
 
 ---
 
-## ADR-008 — Development Source Layout
+## 11.5 Infrastructure Separation
 
-**Status**
+Infrastructure concerns remain independent from business logic.
 
-Accepted
+Examples of infrastructure responsibilities include:
 
-**Decision**
+- Workspace
+- Configuration
+- Logging
+- Filesystem
+- Session Storage
 
-Source code remains inside the `development/` directory during current development.
-
-Example:
-
-```text
-development/
-    parser/
-    workspace/
-    exporter/
-```
-
-**Reason**
-
-Renaming the entire source tree during active development introduces unnecessary work.
-
-The current layout is stable and already integrated with the existing codebase.
-
-Refactoring directory names provides little architectural benefit.
+Business modules should consume infrastructure services without owning them.
 
 ---
 
-## ADR-009 — Versioned Parser
+## 11.6 Stable Interfaces
 
-**Status**
+Public interfaces should remain stable whenever possible.
 
-Accepted
-
-**Decision**
-
-Parser implementations are versioned.
-
-Example:
-
-```text
-development/parser/versions/
-
-parser_v01.py
-parser_v02.py
-parser_v03.py
-parser_v04.py
-```
-
-**Reason**
-
-Parser evolution should remain traceable.
-
-Previous implementations become valuable references during debugging and regression testing.
+Breaking interface changes require engineering review.
 
 ---
 
-## ADR-010 — Documentation Driven Development
+## 11.7 Documentation Before Refactoring
 
-**Status**
+Major refactoring should be documented before implementation begins.
 
-Accepted
+Architectural reasoning is considered part of the implementation.
 
-**Decision**
+---
 
-Major architectural decisions must be documented before implementation.
+# 12. Long-Term Design Constraints
 
-Engineering documentation is considered part of the software.
+The following constraints define the long-term direction of the project.
 
-**Reason**
+## Constraint 1
 
-The project is expected to evolve over a long period.
+There is only one application entry point.
 
-Documentation reduces ambiguity and allows future contributors to understand the reasoning behind architectural choices.
+---
+
+## Constraint 2
+
+Workspace exclusively owns project filesystem management.
+
+---
+
+## Constraint 3
+
+Parser remains responsible only for interpreting HAR data.
+
+---
+
+## Constraint 4
+
+Business modules never manipulate Workspace internals.
+
+---
+
+## Constraint 5
+
+The Runtime Layer consumes structured metadata rather than raw implementation details whenever practical.
+
+---
+
+## Constraint 6
+
+Dependencies always flow downward.
+
+Reverse dependencies are prohibited.
+
+---
+
+## Constraint 7
+
+Documentation evolves together with architecture.
+
+Undocumented architectural changes are discouraged.
+
+---
+
+## Constraint 8
+
+Engineering quality always has higher priority than implementation speed.
 
 ---
 
 # End of Part 2
----
 
-# 13. System Architecture
+# 13. Repository Structure
+The following structure represents the repository root.
 
-## 13.1 Architectural Overview
+```text
+backup.py
+
+development/
+docs/
+analysis/
+projects/
+incoming/
+release/
+tools/
+tests/
+```
+
+| Path | Responsibility |
+|------|----------------|
+| `development/` | Core application modules |
+| `docs/` | Engineering documentation |
+| `analysis/` | Reverse engineering outputs |
+| `projects/` | Generated workspaces |
+| `incoming/` | HAR import directory |
+| `release/` | Release artifacts |
+| `tools/` | Development utilities |
+| `tests/` | Automated testing |
+
+
+# 14. High-Level System Architecture
+
+## 14.1 Architectural Overview
 
 RCBT follows a layered modular architecture.
 
-Each layer has a clearly defined responsibility and communicates only through explicit interfaces.
+Each layer owns a single responsibility and communicates only through well-defined interfaces.
 
-The application is designed to minimize coupling while maximizing component reusability.
+The architecture is designed to maximize maintainability, testability, scalability, and long-term evolution while minimizing coupling between modules.
+
+Application execution always follows a deterministic processing pipeline.
 
 ```text
-                +----------------------+
-                |      backup.py       |
-                |   Main Controller    |
-                +----------+-----------+
-                           |
-                           v
-                +----------------------+
-                |  Workspace Manager   |
-                +----------+-----------+
-                           |
-        +------------------+------------------+
-        |                                     |
-        v                                     v
-+-------------------+               +-------------------+
-|   Project Manager |               |   HAR Importer    |
-+-------------------+               +-------------------+
-        |                                     |
-        +------------------+------------------+
-                           |
-                           v
-                +----------------------+
-                |     HAR Parser       |
-                +----------+-----------+
-                           |
-                           v
-                +----------------------+
-                | Request Discovery    |
-                +----------+-----------+
-                           |
-                           v
-                +----------------------+
-                | Authentication       |
-                | Discovery            |
-                +----------+-----------+
-                           |
-                           v
-                +----------------------+
-                | API Discovery        |
-                +----------+-----------+
-                           |
-                           v
-                +----------------------+
-                | Backup Engine        |
-                +----------+-----------+
-                           |
-                           v
-                +----------------------+
-                | Report Generator     |
-                +----------+-----------+
-                           |
-                           v
-                +----------------------+
-                | Export Engine        |
-                +----------------------+
+                    +----------------------+
+                    |      backup.py       |
+                    |   Main Controller    |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |  Workspace Manager   |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |     HAR Importer     |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |     HAR Parser       |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    | Discovery Engine     |
+                    +----------+-----------+
+                               |
+                +--------------+--------------+
+                |              |              |
+                v              v              v
+        Authentication     Endpoint      Workflow
+          Discovery       Discovery      Discovery
+                |              |              |
+                +--------------+--------------+
+                               |
+                               v
+                    +----------------------+
+                    |     Runtime Layer    |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |  Backup Workflow     |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |    Report Layer      |
+                    +----------+-----------+
+                               |
+                               v
+                    +----------------------+
+                    |    Export Layer      |
+                    +----------------------+
+```
+
+Every stage produces structured artifacts consumed by downstream modules.
+
+No module should bypass the defined execution order.
+
+---
+
+# 14.2 Architecture Layers
+
+The application is organized into multiple logical layers.
+
+Each layer has clearly defined ownership.
+
+---
+
+## Application Layer
+
+Purpose
+
+Coordinate the entire execution.
+
+Current component
+
+```text
+backup.py
+```
+
+Responsibilities
+
+- Application startup
+- Configuration loading
+- Logging initialization
+- Workflow orchestration
+- Global exception handling
+- Runtime coordination
+
+---
+
+## Workspace Layer
+
+Purpose
+
+Manage project lifecycle and filesystem ownership.
+
+Responsibilities
+
+- HAR discovery
+- Workspace creation
+- Project metadata
+- Directory management
+- Path resolution
+- Workspace Context generation
+
+Current implementation
+
+```text
+development/workspace/
 ```
 
 ---
 
-## 13.2 Architectural Layers
+## Parsing Layer
 
-The application is divided into several logical layers.
+Purpose
 
-### Application Layer
+Interpret HAR files.
 
-Responsible for:
+Responsibilities
 
-- startup
-- execution flow
-- orchestration
+- HAR validation
+- Request parsing
+- Request normalization
+- Parsed request generation
 
-Current component:
-
-- `backup.py`
-
----
-
-### Workspace Layer
-
-Responsible for:
-
-- project creation
-- filesystem management
-- path resolution
-- project metadata
-
-Current components:
-
-- workspace.py
-- project_info.py
-- path_manager.py
-- har_importer.py
-
----
-
-### Parsing Layer
-
-Responsible for reading HAR files.
-
-Current components:
-
-- parser_v01
-- parser_v02
-- parser_v03
-- parser_v04
-
----
-
-### Discovery Layer
-
-Responsible for transforming parsed requests into structured knowledge.
-
-Includes:
-
-- Request Discovery
-- Authentication Discovery
-- API Discovery
-
----
-
-### Backup Layer
-
-Responsible for downloading resources from Ruijie Cloud.
-
-Produces backup artifacts.
-
----
-
-### Reporting Layer
-
-Responsible for generating reports and exports.
-
-Supported outputs may include:
-
-- JSON
-- HTML
-- CSV
-- Excel
-
----
-
-## 13.3 Dependency Rules
-
-Dependencies must always point downward.
+Current implementation
 
 ```text
-backup.py
-      │
-      ▼
+development/parser/
+```
+
+---
+
+## Discovery Layer
+
+Purpose
+
+Transform parsed requests into structured engineering knowledge.
+
+Responsibilities
+
+- Authentication Discovery
+- Endpoint Discovery
+- Workflow Discovery
+- Request Classification
+- Response Analysis
+
+Discovery does not perform runtime operations.
+
+---
+
+## Runtime Layer
+
+Purpose
+
+Execute application behavior using structured discovery results.
+
+Responsibilities
+
+- Authentication Runtime
+- API Runtime
+- Download Runtime
+- Backup Runtime
+- Execution Control
+
+Runtime never parses HAR directly.
+
+---
+
+## Report Layer
+
+Purpose
+
+Generate structured execution reports.
+
+Responsibilities
+
+- Execution summary
+- Statistics
+- Error reporting
+- Runtime metrics
+
+---
+
+## Export Layer
+
+Purpose
+
+Generate distributable project artifacts.
+
+Responsibilities
+
+- JSON export
+- HTML export
+- CSV export
+- ZIP packaging
+- Future export formats
+
+---
+
+# 14.3 Architectural Principles
+
+The architecture follows several mandatory principles.
+
+## Layer Independence
+
+Every layer owns one responsibility.
+
+Business logic must not leak across architectural boundaries.
+
+---
+
+## Explicit Dependencies
+
+Dependencies always flow downward.
+
+```text
+Main Controller
+        │
+        ▼
 Workspace
-      │
-      ▼
+        │
+        ▼
 Parser
-      │
-      ▼
-Discovery
-      │
-      ▼
-Backup
-      │
-      ▼
-Report
+        │
+        ▼
+Discovery Layer
+        │
+        ▼
+Runtime Layer
+        │
+        ▼
+Backup Workflow
+        │
+        ▼
+Report Layer
+        │
+        ▼
+Export Layer
 ```
 
 Reverse dependencies are prohibited.
 
-Example:
+---
 
-Parser must never call Workspace.
+## Infrastructure Isolation
 
-Discovery must never call Main Controller.
+Infrastructure components remain isolated from business logic.
 
-Backup must never create project folders.
+Infrastructure includes:
+
+- Workspace
+- Filesystem
+- Configuration
+- Logging
+
+Business modules consume infrastructure but never own it.
 
 ---
 
-## 13.4 Communication Principles
+## Reusable Components
 
-Each module communicates only through explicit data.
+Every module should remain reusable.
 
-Modules must not access another module's internal state.
+Modules should avoid assumptions about:
 
-Communication should occur through:
-
-- return values
-- models
-- configuration objects
-
-Global state should be avoided whenever possible.
+- filesystem layout
+- runtime environment
+- project-specific configuration
 
 ---
 
-## 13.5 Design Constraints
+## Stable Contracts
+
+Communication between modules occurs only through explicit contracts.
+
+Preferred communication mechanisms include:
+
+- Models
+- Context Objects
+- Structured Metadata
+- Return Values
+
+Global mutable state should be avoided.
+
+---
+
+# 14.4 Architectural Constraints
 
 The following constraints define the architecture.
 
-### One Entry Point
+## One Entry Point
 
-The application starts only from:
+Application execution always begins from:
 
 ```text
 backup.py
@@ -827,160 +811,216 @@ backup.py
 
 ---
 
-### One Workspace
+## One Workspace
 
-Every execution belongs to exactly one project workspace.
-
----
-
-### One Source HAR
-
-Each workspace originates from one HAR session.
+Every execution belongs to exactly one Workspace.
 
 ---
 
-### Predictable Execution
+## One Processing Pipeline
 
-Every run follows the same processing sequence.
+Every execution follows the same processing order.
 
-No module may skip mandatory stages.
+Skipping stages is prohibited.
 
 ---
 
-### Reusable Components
+## Workspace Owns Infrastructure
 
-Every business module should be reusable outside the main application.
+Only Workspace manages project directories.
 
-Whenever possible, modules should avoid assumptions about filesystem layout or execution environment.
+No other module may create project structures.
+
+---
+
+## Parser Remains Pure
+
+Parser only interprets HAR.
+
+Parser never performs:
+
+- authentication
+- download
+- reporting
+- workspace creation
+
+---
+
+## Discovery Produces Knowledge
+
+Discovery transforms parsed requests into reusable metadata.
+
+Discovery does not execute runtime behavior.
+
+---
+
+## Runtime Consumes Structured Metadata
+
+The Runtime Layer consumes structured outputs produced by Discovery.
+
+Runtime should remain independent from raw HAR data whenever practical.
+
+---
+
+# 14.5 Long-Term Architecture Direction
+
+The architecture has been intentionally designed for future expansion.
+
+Future capabilities may include:
+
+- Knowledge Engine
+- Restore Runtime
+- Plugin System
+- Parallel Execution
+- Scheduler
+- Cloud Synchronization
+- API Server
+- Web Dashboard
+
+These future capabilities should integrate without requiring major architectural redesign.
 
 ---
 
 # End of Part 3
----
 
-# 14. Workspace System
+# 15. Workspace Architecture
 
-## 14.1 Purpose
+## 15.1 Purpose
 
-The Workspace System is responsible for managing the lifecycle of every backup project.
+The Workspace subsystem is responsible for managing the complete lifecycle of every project.
 
-Its primary objective is to transform an incoming HAR file into a fully structured and isolated project workspace that can be processed independently by the remaining application modules.
+Its purpose is to transform an incoming HAR file into a fully isolated project workspace that can be processed independently by the remaining application modules.
 
-The Workspace subsystem is the only component responsible for project organization and filesystem management.
+Workspace is the only subsystem that owns project infrastructure.
 
----
-
-## 14.2 Responsibilities
-
-The Workspace subsystem is responsible for:
-
-- Detecting incoming HAR files.
-- Creating new project workspaces.
-- Generating standard directory structures.
-- Moving HAR files into project input directories.
-- Creating project metadata.
-- Managing project paths.
-- Providing workspace information to downstream modules.
-
-The Workspace subsystem must not perform:
-
-- HAR parsing
-- API discovery
-- Authentication extraction
-- Backup operations
-- Report generation
+All other modules consume Workspace Context without manipulating the underlying filesystem.
 
 ---
 
-## 14.3 Workspace Lifecycle
+# 15.2 Responsibilities
 
-Every execution follows the same lifecycle.
+Workspace owns the following responsibilities.
+
+Infrastructure
+
+- Detect incoming HAR files.
+- Create project workspace.
+- Generate project metadata.
+- Create directory structure.
+- Resolve project paths.
+- Provide Workspace Context.
+
+Project Lifecycle
+
+- Initialize project.
+- Prepare input files.
+- Maintain project identity.
+- Manage workspace status.
+
+Workspace must never perform:
+
+- HAR parsing.
+- Authentication discovery.
+- Endpoint discovery.
+- Runtime execution.
+- Backup logic.
+- Report generation.
+
+---
+
+# 15.3 Workspace Lifecycle
+
+Every project follows the same lifecycle.
 
 ```text
-User exports HAR
+User Export HAR
         │
         ▼
-Copy HAR into incoming/
+incoming/
         │
         ▼
-Run backup.py
+Workspace Detection
         │
         ▼
-Workspace detects HAR
+Workspace Creation
         │
         ▼
-Create Project
+Project Metadata
         │
         ▼
-Move HAR
+Workspace Context
         │
         ▼
-Generate project.json
-        │
-        ▼
-Return Workspace Context
-        │
-        ▼
-Continue Processing
+Processing Pipeline
 ```
 
-No additional manual preparation should be required.
+Every project execution begins with Workspace initialization.
+
+No downstream module should execute before Workspace has completed successfully.
 
 ---
 
-## 14.4 Incoming Directory
+# 15.4 Incoming Directory
 
-The `incoming/` directory is the entry point of every project.
+The incoming directory is the official entry point for every HAR session.
 
-Example:
+Example
 
 ```text
 incoming/
-├── padang_padang.har
-├── ubud_dream.har
-└── pandawa_hills.har
+
+device_a.har
+
+device_b.har
+
+customer_c.har
 ```
 
 Users only need to copy HAR files into this directory.
 
-The application automatically processes every valid HAR file found inside.
+Workspace automatically discovers every supported HAR file.
+
+Manual workspace creation is never required.
 
 ---
 
-## 14.5 Automatic Project Creation
+# 15.5 Workspace Creation
 
-For every HAR file discovered inside `incoming/`, a new workspace is automatically created.
+Each HAR file generates exactly one Workspace.
 
-Example:
+Example
 
 ```text
 projects/
-└── 20260729_padang_padang/
+
+20260801_customer_a/
 ```
 
-The workspace identifier should uniquely identify each execution.
+Workspace names should remain unique.
 
-Typical naming strategy:
+Recommended naming strategy
 
 ```text
-YYYYMMDD_project_name
+YYYYMMDD_<project_name>
 ```
 
-Example:
+Example
 
 ```text
-20260729_padang_padang
-20260729_ubud_dream
-20260730_pandawa_hills
+20260801_customer_a
+
+20260801_customer_b
+
+20260802_customer_c
 ```
 
-The naming strategy may evolve in future versions, but project uniqueness must always be preserved.
+Future naming strategies may evolve without affecting downstream modules.
 
 ---
 
-## 14.6 Standard Workspace Structure
+# 15.6 Standard Workspace Structure
 
-Every workspace follows the same directory layout.
+Every project follows the same directory layout.
 
 ```text
 projects/
@@ -988,130 +1028,163 @@ projects/
     ├── project.json
     ├── input/
     │   └── session.har
-    │
+    ├── analysis/
     ├── output/
-    │
     ├── report/
-    │
-    └── logs/
+    ├── logs/
+    └── runtime/
 ```
 
-This structure must remain consistent across all projects.
+Every module should rely on Workspace Context rather than constructing filesystem paths manually.
 
-Future modules rely on these predefined locations.
+The following structure represents a single project workspace,
+not the repository root.
 
 ---
 
-## 14.7 Project Metadata
+# 15.7 Workspace Metadata
 
-Every workspace contains a `project.json` file.
+Each Workspace contains a project metadata file.
 
-Its purpose is to describe the workspace independently of its generated artifacts.
+```text
+project.json
+```
 
-Typical metadata includes:
+Typical metadata includes
 
 - Project ID
 - Project Name
-- Source HAR filename
-- Creation timestamp
-- Application version
-- Processing status
-- Current phase
-- Execution history (future)
+- Creation Timestamp
+- Source HAR
+- Toolkit Version
+- Workspace Status
+- Processing Status
 
-This file becomes the authoritative metadata source for the workspace.
+Future versions may extend this metadata without breaking compatibility.
 
 ---
 
-## 14.8 Workspace Context
+# 15.8 Workspace Context
 
-Once a workspace has been created, the Workspace subsystem returns a Workspace Context object.
+Workspace returns a standardized context object consumed by downstream modules.
 
-The context provides downstream modules with standardized project information.
-
-Typical information includes:
+Typical information includes
 
 - Project Root
 - Input Directory
+- Analysis Directory
 - Output Directory
 - Report Directory
+- Runtime Directory
 - Log Directory
-- HAR File Location
-- Project Metadata
+- Metadata Location
+- HAR Location
 
-Downstream modules should rely on this context rather than constructing filesystem paths manually.
+Every downstream module should consume Workspace Context instead of manually resolving paths.
 
 ---
 
-## 14.9 Filesystem Ownership
+# 15.9 Filesystem Ownership
 
 Workspace exclusively owns the project filesystem.
 
-Only Workspace may:
+Workspace may
 
-- Create directories
-- Move HAR files
-- Resolve paths
-- Generate project metadata
+- Create directories.
+- Move HAR files.
+- Generate metadata.
+- Resolve project paths.
+- Prepare runtime directories.
 
-Other modules must treat the workspace as read-only infrastructure.
+Other modules must never
 
-Parser modules, discovery modules, and backup modules must never create project directories.
+- Create project folders.
+- Rename project directories.
+- Move HAR files.
+- Modify Workspace metadata.
 
----
-
-## 14.10 Future Expansion
-
-The Workspace System has been intentionally designed for future enhancements.
-
-Possible future capabilities include:
-
-- Multiple workspace management
-- Workspace indexing
-- Project search
-- Execution history
-- Resume interrupted backups
-- Workspace cleanup
-- Parallel execution support
-
-These capabilities should be implemented without changing the core workspace lifecycle.
+Filesystem ownership must remain centralized.
 
 ---
 
-## 14.11 Design Principles
+# 15.10 Workspace Design Principles
 
-The Workspace System follows the following principles:
+Workspace follows the following principles.
 
-- Automatic over manual.
-- Convention over configuration.
-- Predictable directory layout.
-- Isolated project execution.
-- Single filesystem owner.
-- Stable project metadata.
-- Future scalability.
+Automatic over manual.
+
+Convention over configuration.
+
+Predictable directory layout.
+
+Single filesystem owner.
+
+Explicit project identity.
+
+Stable project metadata.
+
+Future scalability.
+
+Minimal coupling.
+
+---
+
+# 15.11 Workspace Contracts
+
+Workspace produces
+
+- Workspace Context
+- Project Metadata
+- Project Structure
+
+Workspace consumes
+
+- HAR File
+
+Workspace communicates only through explicit context objects.
+
+No downstream module should depend on Workspace implementation details.
+
+---
+
+# 15.12 Future Expansion
+
+The Workspace subsystem has been intentionally designed for future capabilities.
+
+Potential future enhancements include
+
+- Multiple Workspace management.
+- Workspace indexing.
+- Workspace search.
+- Resume interrupted execution.
+- Parallel Workspace execution.
+- Workspace archiving.
+- Incremental Workspace updates.
+- Cloud Workspace synchronization.
+
+Future expansion should preserve backward compatibility and existing Workspace contracts.
 
 ---
 
 # End of Part 4
+
+# 16. Processing Workflow & Data Flow
+
+## 16.1 Purpose
+
+The Processing Workflow defines the official execution lifecycle of the Ruijie Cloud Backup Toolkit (RCBT).
+
+Its purpose is to ensure every execution follows a predictable, reproducible, and deterministic processing pipeline.
+
+Each stage produces structured artifacts consumed by downstream modules.
+
+No module should bypass the defined workflow.
+
 ---
 
-# 15. Processing Workflow & Data Flow
+# 16.2 Processing Pipeline
 
-## 15.1 Purpose
-
-The Processing Workflow defines the complete execution sequence of the application.
-
-Its purpose is to ensure every backup execution follows a predictable, repeatable, and deterministic process.
-
-Each stage produces artifacts that become the input for the next stage.
-
-Modules must never skip stages or bypass the established processing pipeline.
-
----
-
-## 15.2 High-Level Workflow
-
-The complete execution flow is illustrated below.
+Every execution follows the same high-level pipeline.
 
 ```text
 User
@@ -1126,468 +1199,436 @@ incoming/
 backup.py
  │
  ▼
-Workspace Manager
+Workspace
  │
  ▼
-Project Workspace
+HAR Importer
  │
  ▼
 HAR Parser
  │
  ▼
-Request Discovery
+Discovery Engine
  │
  ▼
-Authentication Discovery
+Runtime Layer
  │
  ▼
-API Discovery
+Backup Workflow
  │
  ▼
-Backup Engine
+Report Layer
  │
  ▼
-Report Generator
- │
- ▼
-Exporter
+Export Layer
  │
  ▼
 Finished
 ```
 
-Every execution follows this sequence.
+Each stage has a clearly defined responsibility.
 
 ---
 
-## 15.3 Execution Stages
+# 16.3 Execution Stages
 
-### Stage 1 — HAR Acquisition
+## Stage 1 — HAR Acquisition
 
-Input:
+Input
 
 ```text
 incoming/*.har
 ```
 
-Output:
-
-Workspace creation request.
-
-Responsibilities:
+Responsibilities
 
 - Detect HAR files.
-- Validate file existence.
+- Validate file format.
 - Ignore unsupported files.
+- Prepare Workspace initialization.
+
+Output
+
+HAR Import Request.
 
 ---
 
-### Stage 2 — Workspace Initialization
+## Stage 2 — Workspace Initialization
 
-Input:
+Input
 
-HAR file.
+HAR Import Request.
 
-Output:
+Responsibilities
 
-Project Workspace.
+- Create Workspace.
+- Generate project metadata.
+- Prepare directory structure.
+- Move HAR into Workspace.
+- Generate Workspace Context.
 
-Generated artifacts:
+Output
 
-```text
-project.json
-input/session.har
-```
-
-Responsibilities:
-
-- Create workspace.
-- Generate metadata.
-- Move HAR into input directory.
-- Return Workspace Context.
+Workspace Context.
 
 ---
 
-### Stage 3 — HAR Parsing
+## Stage 3 — HAR Parsing
 
-Input:
+Input
 
-```text
-input/session.har
-```
+Workspace Context.
 
-Output:
-
-Parsed HTTP request collection.
-
-Responsibilities:
+Responsibilities
 
 - Read HAR.
-- Validate HAR format.
-- Parse requests.
-- Preserve request ordering.
+- Validate HAR structure.
+- Parse HTTP requests.
+- Preserve chronological order.
+- Normalize request data.
 
-Parser must not perform business logic.
+Output
 
----
+Parsed Requests.
 
-### Stage 4 — Request Discovery
-
-Input:
-
-Parsed requests.
-
-Output:
-
-```text
-output/request_catalog.json
-```
-
-Responsibilities:
-
-- Detect endpoints.
-- Classify HTTP methods.
-- Extract URLs.
-- Extract headers.
-- Extract query parameters.
+Parser performs no business logic.
 
 ---
 
-### Stage 5 — Authentication Discovery
+## Stage 4 — Discovery
 
-Input:
+Input
 
-Parsed requests.
+Parsed Requests.
 
-Output:
+Responsibilities
 
-```text
-output/auth_catalog.json
-```
+- Discover Authentication.
+- Discover Endpoints.
+- Discover Workflow.
+- Classify Requests.
+- Analyze Responses.
+- Build Discovery Metadata.
 
-Responsibilities:
+Output
 
-- Authorization tokens.
-- Cookies.
-- CSRF tokens.
-- Session identifiers.
-- Tenant information.
-- User information.
+Discovery Metadata.
 
----
+Discovery is responsible only for understanding captured communication.
 
-### Stage 6 — API Discovery
-
-Input:
-
-Request Catalog
-
-Authentication Catalog
-
-Output:
-
-```text
-output/api_catalog.json
-```
-
-Responsibilities:
-
-- Merge discovered endpoints.
-- Remove duplicates.
-- Classify APIs.
-- Build endpoint relationships.
+It never executes runtime operations.
 
 ---
 
-### Stage 7 — Backup Engine
+## Stage 5 — Runtime Preparation
 
-Input:
+Input
 
-API Catalog
+Discovery Metadata.
 
-Authentication Catalog
+Responsibilities
 
-Workspace Context
+- Build Runtime Context.
+- Prepare Authentication Runtime.
+- Prepare API Runtime.
+- Resolve Endpoint Metadata.
+- Prepare Download Strategy.
 
-Output:
+Output
 
-Downloaded resources.
-
-Responsibilities:
-
-- Authenticate requests.
-- Download resources.
-- Preserve hierarchy.
-- Handle pagination.
-- Retry failed requests.
+Runtime Context.
 
 ---
 
-### Stage 8 — Report Generation
+## Stage 6 — Backup Workflow
 
-Input:
+Input
 
-Execution results.
+Runtime Context.
 
-Output:
+Responsibilities
 
-```text
-report/
-```
+- Authenticate.
+- Execute API Requests.
+- Handle Pagination.
+- Retry Failed Operations.
+- Download Resources.
+- Preserve Resource Hierarchy.
 
-Responsibilities:
+Output
 
-- Execution summary.
-- Statistics.
-- Errors.
-- Download summary.
+Backup Artifacts.
 
 ---
 
-### Stage 9 — Export
+## Stage 7 — Report Generation
 
-Input:
+Input
 
-Project artifacts.
+Execution Results.
 
-Output examples:
+Responsibilities
 
-```text
-backup.zip
-report.html
-catalog.json
-```
+- Execution Summary.
+- Runtime Statistics.
+- Download Summary.
+- Error Report.
+- Processing Metrics.
 
-Supported export formats may include:
+Output
+
+Report Artifacts.
+
+---
+
+## Stage 8 — Export
+
+Input
+
+Workspace Artifacts.
+
+Responsibilities
+
+- Package Results.
+- Export Reports.
+- Export Metadata.
+- Generate Deliverables.
+
+Supported outputs may include
 
 - JSON
 - HTML
 - CSV
-- Excel
 - ZIP
+
+Output
+
+Export Packages.
 
 ---
 
-## 15.4 Data Flow
+# 16.4 Artifact Flow
 
-The following diagram illustrates artifact generation throughout the execution.
+The following diagram illustrates how artifacts move throughout the pipeline.
 
 ```text
 HAR
  │
  ▼
+Workspace Context
+ │
+ ▼
 Parsed Requests
  │
- ├──────────────┐
- ▼              ▼
-Request      Authentication
-Catalog      Catalog
- │              │
- └──────┬───────┘
-        ▼
-    API Catalog
-        │
-        ▼
- Backup Engine
-        │
-        ▼
- Backup Files
-        │
-        ▼
- Reports
-        │
-        ▼
- Export
+ ▼
+Discovery Metadata
+ │
+ ▼
+Runtime Context
+ │
+ ▼
+Backup Artifacts
+ │
+ ▼
+Reports
+ │
+ ▼
+Export Packages
 ```
 
-Each artifact has a clearly defined producer and consumer.
+Each artifact has exactly one producer.
+
+Each artifact may have multiple consumers.
 
 ---
 
-## 15.5 Processing Contracts
+# 16.5 Processing Contracts
 
-Each module must satisfy the following contracts.
+Every processing stage produces explicit outputs.
 
-### Workspace
+## Workspace
 
-Produces:
+Consumes
 
-Workspace Context
+HAR.
 
-Consumes:
+Produces
 
-HAR file
-
----
-
-### Parser
-
-Produces:
-
-Parsed Requests
-
-Consumes:
-
-Workspace Context
+Workspace Context.
 
 ---
 
-### Request Discovery
+## Parser
 
-Produces:
+Consumes
 
-Request Catalog
+Workspace Context.
 
-Consumes:
+Produces
 
-Parsed Requests
-
----
-
-### Authentication Discovery
-
-Produces:
-
-Authentication Catalog
-
-Consumes:
-
-Parsed Requests
+Parsed Requests.
 
 ---
 
-### API Discovery
+## Discovery
 
-Produces:
+Consumes
 
-API Catalog
+Parsed Requests.
 
-Consumes:
+Produces
 
-Request Catalog
-
-Authentication Catalog
+Discovery Metadata.
 
 ---
 
-### Backup Engine
+## Runtime
 
-Produces:
+Consumes
 
-Backup Files
+Discovery Metadata.
 
-Consumes:
+Produces
 
-Workspace Context
-
-API Catalog
-
-Authentication Catalog
+Runtime Context.
 
 ---
 
-### Report Generator
+## Backup Workflow
 
-Produces:
+Consumes
 
-Reports
+Runtime Context.
 
-Consumes:
+Produces
 
-Execution Results
-
----
-
-### Export Engine
-
-Produces:
-
-Export Packages
-
-Consumes:
-
-Workspace Artifacts
+Backup Artifacts.
 
 ---
 
-## 15.6 Error Handling Strategy
+## Report Layer
 
-Processing should stop immediately when a critical stage fails.
+Consumes
 
-Critical failures include:
+Execution Results.
 
-- Missing HAR file.
-- Invalid HAR format.
+Produces
+
+Reports.
+
+---
+
+## Export Layer
+
+Consumes
+
+Workspace Artifacts.
+
+Produces
+
+Export Packages.
+
+---
+
+# 16.6 Error Handling Strategy
+
+Processing should stop immediately whenever a critical stage fails.
+
+Critical failures include
+
+- Missing HAR.
+- Invalid HAR.
 - Workspace initialization failure.
 - Parser failure.
+- Discovery failure.
 
-Non-critical failures include:
+Non-critical failures include
 
-- Single endpoint download failure.
+- Single resource download failure.
 - Retry exhaustion.
 - Partial export failure.
+- Optional report generation failure.
 
-Whenever possible, non-critical failures should be logged while allowing processing to continue.
+Whenever practical, non-critical failures should be logged while allowing processing to continue.
 
 ---
 
-## 15.7 Logging Strategy
+# 16.7 Logging Strategy
 
 Every stage should generate structured logs.
 
-Typical information includes:
+Each log entry should include
 
-- Timestamp
-- Processing stage
-- Module name
-- Severity
-- Message
-- Exception details (if applicable)
+- Timestamp.
+- Processing Stage.
+- Module Name.
+- Severity.
+- Message.
+- Exception Details (if applicable).
 
-Logs should be written into:
+Logs should be stored under
 
 ```text
-logs/backup.log
+logs/
 ```
 
-Future versions may support log rotation and multiple log levels.
+Future implementations may support
+
+- Log Rotation.
+- Multiple Log Levels.
+- Structured JSON Logs.
+- Centralized Logging.
 
 ---
 
-## 15.8 Workflow Principles
+# 16.8 Processing Principles
 
-The processing workflow follows these principles:
+The processing workflow follows several principles.
 
 - Sequential execution.
-- Deterministic outputs.
-- Explicit artifact generation.
-- Immutable intermediate artifacts.
+- Explicit artifacts.
+- Deterministic behavior.
 - Reproducible execution.
 - Failure isolation.
-- Clear ownership of responsibilities.
+- Explicit ownership.
+- Immutable intermediate artifacts.
+- Predictable processing order.
+
+---
+
+# 16.9 Runtime Principles
+
+Runtime Layer should never perform discovery.
+
+Runtime responsibilities are limited to execution.
+
+Runtime should consume structured metadata produced by Discovery.
+
+Whenever possible, Runtime should remain independent from raw HAR files.
+
+This separation preserves maintainability and enables future Knowledge Engine integration without redesigning Runtime Layer.
 
 ---
 
 # End of Part 5
----
 
-# 16. Module Responsibilities
+# 17. Module Responsibilities
 
-## 16.1 Purpose
+## 17.1 Purpose
 
-This section defines the responsibility boundaries of every major module within the project.
+This section defines the responsibility boundaries of every major module within the Ruijie Cloud Backup Toolkit (RCBT).
 
-Each module has one clearly defined purpose.
+Each module owns exactly one primary responsibility.
 
 Responsibilities must never overlap.
 
-Whenever new functionality is introduced, it should be assigned to an existing module only if it aligns with that module's responsibility.
+Whenever new functionality is introduced, it should be assigned to an existing module only if it belongs to that module's responsibility.
 
-Otherwise, a new module should be created.
+Otherwise, a new module should be introduced.
 
 ---
 
-# 16.2 Main Controller
+# 17.2 Main Controller
 
 Location
 
@@ -1597,29 +1638,29 @@ backup.py
 
 Purpose
 
-Acts as the single application entry point.
+Coordinate the entire application lifecycle.
 
 Responsibilities
 
-- Start application execution.
-- Load configuration.
-- Initialize logging.
-- Initialize Workspace.
-- Execute processing pipeline.
-- Handle global exceptions.
-- Display execution summary.
+- Application startup.
+- Configuration loading.
+- Logging initialization.
+- Workflow orchestration.
+- Workspace initialization.
+- Global exception handling.
+- Execution summary.
 
 Must NOT
 
 - Parse HAR.
-- Discover APIs.
+- Execute Discovery.
+- Execute Runtime logic.
 - Download resources.
 - Generate reports.
-- Manipulate business data.
 
 ---
 
-# 16.3 Workspace Module
+# 17.3 Workspace Module
 
 Location
 
@@ -1629,35 +1670,34 @@ development/workspace/
 
 Purpose
 
-Manage project lifecycle and filesystem.
+Manage project lifecycle and infrastructure.
 
 Responsibilities
 
-- Detect incoming HAR files.
-- Create project workspace.
+- Detect HAR files.
+- Create Workspace.
 - Generate project metadata.
+- Manage project paths.
 - Move HAR files.
-- Resolve project paths.
 - Return Workspace Context.
-
-Components
-
-```text
-workspace.py
-project_info.py
-path_manager.py
-har_importer.py
-```
 
 Must NOT
 
 - Parse HAR.
-- Detect APIs.
+- Discover APIs.
+- Authenticate users.
+- Execute Runtime.
 - Download resources.
+
+Produces
+
+```text
+Workspace Context
+```
 
 ---
 
-# 16.4 Parser Module
+# 17.4 Parser Module
 
 Location
 
@@ -1667,31 +1707,25 @@ development/parser/
 
 Purpose
 
-Read and interpret HAR files.
+Interpret HAR files.
 
 Responsibilities
 
 - Validate HAR.
 - Read requests.
-- Preserve request order.
-- Normalize parsed data.
-- Return parsed requests.
-
-Components
-
-```text
-modules/
-versions/
-```
+- Normalize requests.
+- Preserve execution order.
+- Produce Parsed Requests.
 
 Must NOT
 
-- Create folders.
-- Move files.
-- Perform API discovery.
+- Create project directories.
+- Authenticate.
+- Discover APIs.
+- Execute Runtime.
 - Download resources.
 
-Output
+Produces
 
 ```text
 Parsed Requests
@@ -1699,53 +1733,32 @@ Parsed Requests
 
 ---
 
-# 16.5 Request Discovery Module
+# 17.5 Discovery Engine
 
 Purpose
 
-Extract request information from parsed HAR data.
+Transform Parsed Requests into reusable engineering metadata.
 
 Responsibilities
 
-- Detect endpoints.
-- Extract HTTP methods.
-- Extract URLs.
-- Extract query parameters.
-- Extract request headers.
+- Authentication Discovery.
+- Endpoint Discovery.
+- Workflow Discovery.
+- Request Classification.
+- Response Analysis.
+- Metadata Generation.
+
+Must NOT
+
+- Execute Runtime.
+- Download resources.
+- Generate reports.
+- Modify Workspace.
 
 Produces
 
 ```text
-request_catalog.json
-```
-
-Consumes
-
-```text
-Parsed Requests
-```
-
----
-
-# 16.6 Authentication Discovery Module
-
-Purpose
-
-Extract authentication-related information.
-
-Responsibilities
-
-- Authorization header.
-- Cookies.
-- CSRF tokens.
-- Session identifiers.
-- Tenant identifiers.
-- User identifiers.
-
-Produces
-
-```text
-auth_catalog.json
+Discovery Metadata
 ```
 
 Consumes
@@ -1756,88 +1769,90 @@ Parsed Requests
 
 ---
 
-# 16.7 API Discovery Module
+# 17.6 Runtime Module
+
+Location
+
+```text
+development/runtime/
+```
 
 Purpose
 
-Create a structured API catalog.
+Execute application behavior using structured discovery results.
 
 Responsibilities
 
-- Merge endpoints.
-- Remove duplicates.
-- Detect endpoint relationships.
-- Classify APIs.
-- Build API metadata.
+- Authentication Runtime.
+- Session Management.
+- API Execution.
+- Download Preparation.
+- Runtime Validation.
+- Execution Context.
+
+Must NOT
+
+- Parse HAR.
+- Discover Endpoints.
+- Create Workspace.
+- Generate Reports.
 
 Produces
 
 ```text
-api_catalog.json
+Runtime Context
 ```
 
 Consumes
 
 ```text
-Request Catalog
-Authentication Catalog
+Discovery Metadata
 ```
 
 ---
 
-# 16.8 Backup Engine
+# 17.7 Backup Workflow
+
+Location
+
+```text
+development/workflow/
+```
 
 Purpose
 
-Download Ruijie Cloud resources.
+Coordinate backup execution.
 
 Responsibilities
 
-- Authenticate requests.
-- Execute API calls.
-- Handle pagination.
-- Handle retries.
-- Preserve downloaded resources.
+- Execute Backup Pipeline.
+- Coordinate Runtime.
+- Handle Retry Logic.
+- Handle Pagination.
+- Preserve Resource Structure.
+- Generate Execution Results.
+
+Must NOT
+
+- Parse HAR.
+- Discover APIs.
+- Modify Workspace.
 
 Produces
 
 ```text
-backup/
+Backup Artifacts
 ```
 
 Consumes
 
 ```text
-Workspace Context
-API Catalog
-Authentication Catalog
+Runtime Context
 ```
 
 ---
 
-# 16.9 Restore Engine
-
-Purpose
-
-Restore backed-up resources.
-
-Responsibilities
-
-- Load backup.
-- Validate resources.
-- Restore configuration.
-- Execute restore operations.
-- Generate restore summary.
-
-Consumes
-
-```text
-backup/
-```
-
----
-
-# 16.10 Report Generator
+# 17.8 Report Layer
 
 Location
 
@@ -1851,21 +1866,27 @@ Generate execution reports.
 
 Responsibilities
 
-- Execution summary.
+- Execution Summary.
+- Download Summary.
+- Error Summary.
 - Statistics.
-- Error reports.
-- Processing duration.
-- Download summary.
+- Runtime Metrics.
 
 Produces
 
 ```text
-report/
+Reports
+```
+
+Consumes
+
+```text
+Execution Results
 ```
 
 ---
 
-# 16.11 Export Module
+# 17.9 Export Layer
 
 Location
 
@@ -1875,55 +1896,59 @@ development/exporter/
 
 Purpose
 
-Export project artifacts.
+Generate distributable artifacts.
 
 Responsibilities
 
-- JSON export.
-- HTML export.
-- CSV export.
-- Excel export.
-- ZIP packaging.
-
-Consumes
-
-Project Artifacts.
+- JSON Export.
+- HTML Export.
+- CSV Export.
+- ZIP Packaging.
+- Future Export Formats.
 
 Produces
 
-Export Packages.
+```text
+Export Packages
+```
+
+Consumes
+
+```text
+Workspace Artifacts
+```
 
 ---
 
-# 16.12 Shared Models
+# 17.10 Shared Models
 
-Future versions should introduce dedicated models shared between modules.
+Modules should communicate using shared models instead of internal implementation details.
 
-Examples
+Typical shared models include
 
 ```text
 WorkspaceContext
 
 ParsedRequest
 
-RequestCatalog
+DiscoveryMetadata
 
-AuthenticationCatalog
+RuntimeContext
 
-ApiCatalog
+ExecutionResult
 
 BackupArtifact
 
-ExecutionResult
+ExportPackage
 ```
 
-Shared models reduce coupling between modules.
+Shared models reduce coupling and improve maintainability.
 
 ---
 
-# 16.13 Dependency Rules
+# 17.11 Dependency Rules
 
-Allowed dependency direction
+Dependencies always flow downward.
 
 ```text
 backup.py
@@ -1935,16 +1960,19 @@ Workspace
 Parser
         │
         ▼
-Discovery
+Discovery Layer
         │
         ▼
-Backup
+Runtime Layer
         │
         ▼
-Report
+Backup Workflow
         │
         ▼
-Exporter
+Report Layer
+        │
+        ▼
+Export Layer
 ```
 
 Reverse dependencies are prohibited.
@@ -1953,1492 +1981,573 @@ Examples
 
 Parser must never import Workspace.
 
-Workspace must never import Backup Engine.
+Workspace must never import Runtime.
+
+Discovery must never import Main Controller.
+
+Runtime must never import Parser.
+
+Report must never import Runtime.
 
 Exporter must never import Parser.
 
-Report Generator must never import Backup Engine.
-
 ---
 
-# 16.14 Responsibility Matrix
+# 17.12 Responsibility Matrix
 
-| Module | Owns Filesystem | Business Logic | Output |
-|---------|-----------------|---------------|--------|
-| Main Controller | ❌ | Execution | Pipeline |
+| Module | Infrastructure | Business Logic | Primary Output |
+|---------|----------------|----------------|----------------|
+| Main Controller | ❌ | Orchestration | Execution Pipeline |
 | Workspace | ✅ | Project Lifecycle | Workspace Context |
-| Parser | ❌ | HAR Parsing | Parsed Requests |
-| Request Discovery | ❌ | Request Analysis | Request Catalog |
-| Authentication Discovery | ❌ | Authentication Analysis | Authentication Catalog |
-| API Discovery | ❌ | API Analysis | API Catalog |
-| Backup Engine | ❌ | Resource Download | Backup Files |
-| Restore Engine | ❌ | Restore Operations | Restore Results |
-| Report Generator | ❌ | Reporting | Reports |
-| Export Module | ❌ | Export | Export Packages |
+| Parser | ❌ | HAR Interpretation | Parsed Requests |
+| Discovery | ❌ | Reverse Engineering | Discovery Metadata |
+| Runtime | ❌ | Runtime Execution | Runtime Context |
+| Backup Workflow | ❌ | Backup Execution | Backup Artifacts |
+| Report | ❌ | Reporting | Reports |
+| Export | ❌ | Packaging | Export Packages |
 
 ---
 
-# 16.15 Design Principles
+# 17.13 Engineering Principles
 
-Every module should satisfy the following rules.
+Every module should satisfy the following principles.
 
-- One responsibility.
-- Explicit input.
-- Explicit output.
-- No hidden dependencies.
-- No filesystem ownership except Workspace.
-- No duplicated business logic.
-- Easily testable.
-- Easily replaceable.
-- Future extensible.
+- Single Responsibility.
+- Explicit Input.
+- Explicit Output.
+- No Hidden Dependencies.
+- No Filesystem Ownership except Workspace.
+- No Business Logic Duplication.
+- Easy to Test.
+- Easy to Replace.
+- Easy to Extend.
+- Production Ready.
+
+Whenever a module grows beyond its primary responsibility, it should be evaluated for decomposition into smaller components.
 
 ---
 
 # End of Part 6
----
 
-# 17. Engineering Standards
+# 18. Engineering Standards
 
-## 17.1 Purpose
+## 18.1 Purpose
 
-This section defines the engineering standards used throughout the project.
+Engineering Standards define the minimum quality requirements for every implementation within the Ruijie Cloud Backup Toolkit (RCBT).
 
-Every implementation must follow these standards to ensure consistency, maintainability, readability, and long-term scalability.
+These standards ensure that the project remains maintainable, scalable, and production-ready throughout its lifecycle.
 
-Coding style should never depend on personal preference.
-
----
-
-# 17.2 General Principles
-
-The project follows these engineering principles.
-
-- Readability over cleverness.
-- Explicit is better than implicit.
-- Composition over duplication.
-- Small functions.
-- Small modules.
-- Predictable behavior.
-- Consistent naming.
-- Production-quality code.
-
-Every commit should improve or preserve code quality.
+Every implementation should comply with these standards before being considered complete.
 
 ---
 
-# 17.3 Python Version
+# 18.2 Coding Standards
 
-Current target:
+Every implementation should follow consistent engineering practices.
 
-```text
-Python 3.11+
-```
+Requirements
 
-Future code should remain compatible with the project's supported Python version.
+- Production-ready implementation.
+- Readable code.
+- Explicit naming.
+- Strong typing whenever practical.
+- Small, focused modules.
+- Explicit exception handling.
+- Minimal side effects.
+- Deterministic behavior.
 
----
+Avoid
 
-# 17.4 Coding Style
-
-The project follows:
-
-- PEP 8
-- PEP 257
-- Type Hints
-- Explicit Imports
-
-Recommended formatter:
-
-```text
-black
-```
-
-Recommended linter:
-
-```text
-ruff
-```
-
-Recommended type checker:
-
-```text
-mypy
-```
+- Hidden dependencies.
+- Implicit behavior.
+- Hardcoded values.
+- Business logic duplication.
+- Circular imports.
+- Global mutable state.
 
 ---
 
-# 17.5 File Naming Convention
+# 18.3 Design Standards
 
-Python files use:
+The architecture should remain modular.
 
-```text
-snake_case.py
-```
+Preferred characteristics
+
+- Single Responsibility Principle.
+- Separation of Concerns.
+- Dependency Isolation.
+- Explicit Interfaces.
+- Composition over inheritance.
+- Configuration-driven behavior.
+
+Every design decision should improve maintainability rather than increase implementation speed.
+
+---
+
+# 18.4 Configuration Standards
+
+Configuration must remain external to business logic.
+
+Configuration includes
+
+- API Endpoints.
+- Credentials.
+- Runtime Options.
+- Directory Locations.
+- Feature Flags.
+- Timeout Values.
+
+Configuration must never be hardcoded inside business modules.
+
+---
+
+# 18.5 Error Handling Standards
+
+Errors should be handled explicitly.
+
+Each exception should
+
+- Describe the problem.
+- Preserve debugging information.
+- Support structured logging.
+- Allow graceful recovery whenever practical.
+
+Unexpected exceptions should never be silently ignored.
+
+---
+
+# 18.6 Logging Standards
+
+Logging should provide enough information to reproduce problems.
+
+Every significant operation should include
+
+- Timestamp.
+- Module Name.
+- Processing Stage.
+- Severity.
+- Message.
+- Context Information.
+
+Logs should support future troubleshooting without requiring source code inspection.
+
+---
+
+# 18.7 Documentation Standards
+
+Documentation is considered part of the implementation.
+
+Every significant engineering change should update the appropriate documentation.
 
 Examples
 
-```text
-workspace.py
+- Architecture changes.
+- Workflow changes.
+- New modules.
+- Engineering decisions.
+- Phase completion.
+- Breaking changes.
 
-project_info.py
+Documentation must remain synchronized with implementation.
 
-auth_discovery.py
+---
 
-path_manager.py
-```
+# 18.8 Git Standards
+
+Git history should represent engineering history.
+
+Every commit should
+
+- Be meaningful.
+- Be traceable.
+- Describe a logical unit of work.
+- Preserve engineering milestones.
 
 Avoid
 
-```text
-Workspace.py
-
-ProjectInfo.py
-
-AuthDiscovery.py
-```
+- Large unrelated commits.
+- Temporary commits.
+- Unclear commit messages.
 
 ---
 
-# 17.6 Class Naming Convention
+# 19. Development Workflow
 
-Classes use:
+Every implementation follows the same engineering workflow.
 
 ```text
-PascalCase
+Analysis
+        │
+        ▼
+Design
+        │
+        ▼
+Engineering Decision
+        │
+        ▼
+Implementation
+        │
+        ▼
+Testing
+        │
+        ▼
+Validation
+        │
+        ▼
+Documentation
+        │
+        ▼
+Git Commit
 ```
 
-Examples
+Skipping workflow stages is discouraged.
 
-```python
-WorkspaceManager
-
-ProjectInfo
-
-HarImporter
-
-ParserV04
-```
+Each stage provides the foundation for the next stage.
 
 ---
 
-# 17.7 Function Naming Convention
+# 20. Quality Standards
 
-Functions use:
+Every implementation should satisfy the following quality attributes.
+
+## Maintainability
+
+The implementation should remain understandable by future contributors.
+
+---
+
+## Readability
+
+Code should communicate intent clearly.
+
+---
+
+## Reliability
+
+Execution should produce deterministic results.
+
+---
+
+## Scalability
+
+Future expansion should not require architectural redesign.
+
+---
+
+## Reusability
+
+Modules should be reusable whenever practical.
+
+---
+
+## Testability
+
+Components should support isolated testing.
+
+---
+
+## Observability
+
+Execution should provide sufficient information for debugging and monitoring.
+
+---
+
+## Backward Compatibility
+
+Existing behavior should remain stable unless explicitly changed.
+
+Breaking changes require engineering review.
+
+---
+
+# 21. Engineering Decision Process
+
+Major engineering decisions should follow a structured process.
 
 ```text
-snake_case
+Problem
+        │
+        ▼
+Investigation
+        │
+        ▼
+Alternative Solutions
+        │
+        ▼
+Decision
+        │
+        ▼
+Implementation
+        │
+        ▼
+Documentation
 ```
 
-Examples
-
-```python
-create_workspace()
-
-load_project()
-
-parse_requests()
-
-build_request_catalog()
-```
+Significant architectural decisions should be documented as ADR (Architecture Decision Record).
 
 ---
 
-# 17.8 Variable Naming
+# 22. Documentation Governance
 
-Variables use:
+Every document has a specific responsibility.
 
-```text
-snake_case
-```
+| Document | Responsibility |
+|----------|----------------|
+| CHAT_BOOTSTRAP.md | AI Working Rules & Engineering Constitution |
+| SESSION_CONTEXT.md | Current Project Status |
+| PROJECT_CONTEXT.md | Long-term Engineering Context |
+| ARCHITECTURE.md | System Architecture |
+| ROADMAP.md | Development Roadmap |
+| CHANGELOG.md | Engineering History |
+| TODO.md | Active Tasks |
+| HISTORY/ | Phase Documentation |
+| DECISIONS/ | Architecture Decision Records |
+| TROUBLESHOOTING/ | Engineering Knowledge Base |
 
-Examples
+Information should always be stored in the document responsible for that information.
 
-```python
-project_root
-
-request_list
-
-workspace_context
-
-auth_catalog
-```
-
-Avoid abbreviations unless they are universally understood.
-
-Good
-
-```python
-request_catalog
-```
-
-Avoid
-
-```python
-req_cat
-```
+Avoid duplicating information across multiple documents.
 
 ---
 
-# 17.9 Constant Naming
-
-Constants use:
-
-```python
-UPPER_CASE
-```
-
-Example
-
-```python
-DEFAULT_TIMEOUT
-
-MAX_RETRY
-
-PROJECT_VERSION
-```
-
----
-
-# 17.10 Package Organization
-
-Each package owns one responsibility.
-
-Example
-
-```text
-workspace/
-
-parser/
-
-backup/
-
-restore/
-
-report/
-
-exporter/
-```
-
-Packages should not overlap responsibilities.
-
----
-
-# 17.11 Function Design
-
-Functions should be:
-
-- Small.
-- Predictable.
-- Easy to test.
-
-Preferred size:
-
-```text
-20–50 lines
-```
-
-Large functions should be decomposed into helper functions.
-
----
-
-# 17.12 Method Responsibilities
-
-Each method should perform one logical task.
-
-Example
-
-Good
-
-```python
-create_workspace()
-
-move_har()
-
-generate_metadata()
-```
-
-Avoid
-
-```python
-process_everything()
-```
-
----
-
-# 17.13 Error Handling
-
-Errors should never be silently ignored.
-
-Preferred
-
-```python
-try:
-    ...
-except Exception as exc:
-    logger.exception(exc)
-    raise
-```
-
-Avoid
-
-```python
-except:
-    pass
-```
-
----
-
-# 17.14 Logging Standard
-
-Logging should replace unnecessary print statements.
-
-Use
-
-```python
-logger.info()
-
-logger.warning()
-
-logger.error()
-
-logger.exception()
-```
-
-Avoid
-
-```python
-print()
-```
-
-except for CLI output.
-
----
-
-# 17.15 Type Hints
-
-Public functions should use type hints whenever practical.
-
-Example
-
-```python
-def create_workspace(project_name: str) -> WorkspaceContext:
-    ...
-```
-
----
-
-# 17.16 Documentation Standard
-
-Every public class and function should include a docstring.
-
-Example
-
-```python
-def parse_requests() -> list:
-    """
-    Parse HTTP requests from the HAR file.
-
-    Returns:
-        List of parsed requests.
-    """
-```
-
----
-
-# 17.17 Comments
-
-Comments should explain:
-
-- Why.
-
-Not
-
-- What.
-
-Good
-
-```python
-# Preserve request order because
-# authentication tokens may depend
-# on previous requests.
-```
-
-Avoid
-
-```python
-# Increment i
-
-i += 1
-```
-
----
-
-# 17.18 Configuration
-
-Avoid hardcoded values.
-
-Configuration should be centralized whenever possible.
-
-Examples
-
-Good
-
-```python
-config.timeout
-```
-
-Avoid
-
-```python
-timeout = 30
-```
-
-inside business logic.
-
----
-
-# 17.19 Dependency Management
-
-Business modules should avoid unnecessary imports.
-
-Dependencies should always point downward.
-
-Example
-
-```text
-Workspace
-
-↓
-
-Parser
-
-↓
-
-Discovery
-
-↓
-
-Backup
-```
-
-Reverse dependencies are prohibited.
-
----
-
-# 17.20 Testing Philosophy
-
-Every module should be testable independently.
-
-Testing should not require:
-
-- Network access
-- Manual interaction
-- Existing project state
-
-Modules should support isolated execution whenever possible.
-
----
-
-# 17.21 Code Review Checklist
-
-Before committing code, verify:
-
-- Responsibility is correct.
-- No duplicated logic.
-- Naming follows convention.
-- Type hints added.
-- Logging implemented.
-- Errors handled correctly.
-- Functions remain small.
-- Documentation updated if necessary.
-
----
-
-# 17.22 Engineering Principles Summary
-
-Every implementation should satisfy:
-
-- Single Responsibility
-- Maintainability
-- Testability
-- Readability
-- Reusability
-- Explicit Data Flow
-- Minimal Coupling
-- Consistent Naming
-- Documentation First
-- Production Quality
+# 23. AI-Assisted Development
+
+AI is considered an engineering partner.
+
+AI should
+
+- Preserve architecture.
+- Preserve documentation quality.
+- Preserve engineering consistency.
+- Respect module responsibilities.
+- Follow repository workflow.
+- Avoid assumptions.
+- Recommend improvements with justification.
+- Produce reproducible implementations.
+- Respect documented engineering decisions (ADR).
+
+AI should not
+
+- Change architecture without justification.
+- Introduce unnecessary abstractions.
+- Duplicate business logic.
+- Bypass engineering workflow.
+- Generate incomplete implementations.
 
 ---
 
 # End of Part 7
----
 
-# 18. Development Workflow
+# 24. Long-Term Architecture Direction
 
-## 18.1 Purpose
+RCBT has been intentionally designed as an extensible engineering platform.
 
-This section defines the official development workflow used throughout the project.
+The architecture should evolve through well-defined phases while preserving backward compatibility and engineering consistency.
 
-Every implementation should follow the same engineering process to ensure consistency, traceability, and maintainability.
+Future capabilities may include:
 
-Development is not limited to writing code.
-
-Documentation, testing, version control, and architectural consistency are considered integral parts of the engineering process.
-
----
-
-# 18.2 Development Lifecycle
-
-Every feature follows the same lifecycle.
-
-```text
-Planning
-    │
-    ▼
-Architecture Review
-    │
-    ▼
-Implementation
-    │
-    ▼
-Testing
-    │
-    ▼
-Documentation Update
-    │
-    ▼
-Git Commit
-    │
-    ▼
-Git Push
-    │
-    ▼
-Project Review
-```
-
-Skipping stages is discouraged.
-
----
-
-# 18.3 Implementation Workflow
-
-Every implementation should follow these steps.
-
-Step 1
-
-Review PROJECT_CONTEXT.md.
-
-Step 2
-
-Confirm the current phase.
-
-Step 3
-
-Review existing architecture.
-
-Step 4
-
-Implement one logical feature.
-
-Step 5
-
-Run local testing.
-
-Step 6
-
-Update documentation if necessary.
-
-Step 7
-
-Commit changes.
-
-Step 8
-
-Push changes to GitHub.
-
----
-
-# 18.4 Git Workflow
-
-Current strategy:
-
-Single main branch.
-
-```text
-main
-```
-
-Development currently occurs directly on `main`.
-
-Future versions may introduce:
-
-```text
-main
-
-develop
-
-feature/*
-```
-
-when the project complexity requires branch-based development.
-
----
-
-# 18.5 Commit Convention
-
-Commits should follow Conventional Commits.
-
-Supported prefixes include:
-
-```text
-feat:
-fix:
-docs:
-refactor:
-test:
-perf:
-build:
-chore:
-style:
-```
-
-Examples
-
-```text
-feat(workspace): add project initialization
-
-fix(parser): preserve request order
-
-docs: update PROJECT_CONTEXT
-
-refactor(backup): simplify execution pipeline
-```
-
-Commit messages should describe the intention rather than implementation details.
-
----
-
-# 18.6 Git Tags
-
-Major milestones should be tagged.
-
-Examples
-
-```text
-v0.1.0
-
-v0.2.0
-
-v0.3.0
-
-v0.4.0
-```
-
-Tags represent stable engineering checkpoints.
-
-They should not be created for incomplete work.
-
----
-
-# 18.7 Documentation Workflow
-
-Documentation is considered part of the implementation.
-
-Whenever architecture changes, documentation should be updated before continuing development.
-
-Primary documents include:
-
-```text
-README.md
-
-PROJECT_CONTEXT.md
-
-ARCHITECTURE.md
-
-ROADMAP.md
-
-CHANGELOG.md
-
-TODO.md
-```
-
-Each document has a specific responsibility.
-
----
-
-## README.md
-
-Purpose
-
-User introduction.
-
-Contains
-
-- installation
-- overview
-- usage
-
----
-
-## PROJECT_CONTEXT.md
-
-Purpose
-
-Engineering reference.
-
-Contains
-
-- architecture
-- decisions
-- workflow
-- engineering standards
-
-Highest priority document.
-
----
-
-## ARCHITECTURE.md
-
-Purpose
-
-System overview.
-
-Contains
-
-- high-level architecture
-- module overview
-
----
-
-## ROADMAP.md
-
-Purpose
-
-Long-term planning.
-
-Contains
-
-- phases
-- milestones
-- future implementation
-
----
-
-## CHANGELOG.md
-
-Purpose
-
-Engineering history.
-
-Contains
-
-- completed milestones
-- version history
-
----
-
-## TODO.md
-
-Purpose
-
-Current development state.
-
-Contains
-
-- current sprint
-- current phase
-- next tasks
-
----
-
-# 18.8 Documentation Update Rules
-
-Update documentation whenever:
-
-- Architecture changes.
-- New module introduced.
-- New ADR accepted.
-- Workflow changes.
-- Major feature completed.
-
-Minor bug fixes generally do not require documentation updates.
-
----
-
-# 18.9 Versioning Strategy
-
-The project follows incremental versioning.
-
-Development builds
-
-```text
-v0.x.x-dev
-```
-
-Stable milestones
-
-```text
-v0.x.x
-```
-
-Future stable release
-
-```text
-v1.0.0
-```
-
----
-
-# 18.10 Release Workflow
-
-Typical milestone workflow
-
-```text
-Feature Complete
-        │
-        ▼
-Testing
-        │
-        ▼
-Documentation Update
-        │
-        ▼
-Git Commit
-        │
-        ▼
-Git Push
-        │
-        ▼
-Git Tag
-```
-
-Only stable milestones should receive Git tags.
-
----
-
-# 18.11 Daily Development Workflow
-
-Typical daily workflow.
-
-```text
-Pull Latest Code
-        │
-        ▼
-Review PROJECT_CONTEXT
-        │
-        ▼
-Implement Feature
-        │
-        ▼
-Run Tests
-        │
-        ▼
-Update Documentation
-        │
-        ▼
-Commit
-        │
-        ▼
-Push
-```
-
----
-
-# 18.12 AI Collaboration Workflow
-
-AI is treated as an engineering assistant rather than an implementation authority.
-
-AI should:
-
-- Follow PROJECT_CONTEXT.md.
-- Respect ADR decisions.
-- Preserve module boundaries.
-- Avoid introducing architectural changes without discussion.
-
-AI should not:
-
-- Redesign the project without approval.
-- Change established workflows.
-- Introduce undocumented architecture.
-
-Whenever a significant architectural change is proposed, it should first be documented as a new ADR before implementation.
-
----
-
-# 18.13 Engineering Rules
-
-The following rules apply throughout the project.
-
-- Architecture first.
-- Documentation first.
-- Code second.
-- Test before commit.
-- Commit before push.
-- Push before release.
-- Preserve Git history.
-- Keep modules independent.
-- Avoid unnecessary refactoring.
-- Never sacrifice maintainability for speed.
-
----
-
-# End of Part 8
----
-
-# 19. Project Status & Roadmap
-
-## 19.1 Purpose
-
-This section records the current state of the project.
-
-Unlike previous sections, the contents of this chapter are expected to evolve as development progresses.
-
-This section provides a quick overview of:
-
-- Current project status
-- Active development phase
-- Technical debt
-- Known issues
-- Future milestones
-- Long-term roadmap
-
----
-
-# 19.2 Current Status
-
-| Item | Status |
-|------|--------|
-| Project | Active Development |
-| Current Version | v0.4.0-dev |
-| Current Sprint | Sprint 2 |
-| Current Phase | Phase 3.5.5 |
-| Repository | GitHub Connected |
-| Workspace System | Designed |
-| Documentation | Active |
-| Backup Engine | Not Started |
-| Restore Engine | Not Started |
-
----
-
-# 19.3 Completed Milestones
-
-The following milestones have been completed.
-
-## Project Initialization
-
-Status
-
-Completed
-
-Deliverables
-
-- Git repository initialized
-- GitHub repository connected
-- Initial documentation created
-
----
-
-## Parser Foundation
-
-Status
-
-Completed
-
-Deliverables
-
-- HAR validation
-- HAR loading
-- Request parsing
-- Endpoint normalization
-- Request catalog generation
-
----
-
-## Authentication Discovery Prototype
-
-Status
-
-Completed
-
-Deliverables
-
-- Authentication discovery prototype
-- Authorization detection
-- Cookie discovery
-- Authentication reporting
-
----
-
-## Workspace Architecture
-
-Status
-
-Completed
-
-Deliverables
-
-- Workspace design
-- Incoming directory workflow
-- Project structure
-- Workspace lifecycle
-- Metadata strategy
-
----
-
-# 19.4 Current Sprint
-
-Sprint
-
-Sprint 2
-
-Primary Objective
-
-Refactor the application around the Workspace architecture and transform `backup.py` into the Main Controller.
-
-Current Tasks
-
-- Refactor `backup.py`
-- Integrate Workspace Manager
-- Build execution pipeline
-- Prepare Backup Engine integration
-
----
-
-# 19.5 Upcoming Milestones
-
-The next planned milestones are:
-
-1. Main Controller
-2. Workspace Integration
-3. Backup Engine
-4. Report Generator
-5. Export Module
-6. Restore Engine
-7. Production CLI
-8. Version 1.0 Release
-
----
-
-# 19.6 Technical Debt
-
-The following technical debt has been identified.
-
-## Parser Versions
-
-Multiple parser versions are intentionally retained for historical reference.
-
-Future evaluation should determine whether older versions should remain archived or be consolidated.
-
----
-
-## Temporary Development Structure
-
-The `development/` directory remains the active source tree.
-
-Future refactoring may reorganize packages after the project reaches a stable architecture.
-
----
-
-## Missing Shared Models
-
-Dedicated shared models have not yet been introduced.
-
-Examples include:
-
-- WorkspaceContext
-- ParsedRequest
-- ApiCatalog
-- BackupArtifact
-
-These models should be introduced before large-scale feature expansion.
-
----
-
-## Configuration Management
-
-Configuration is currently minimal.
-
-A centralized configuration system should be introduced before production release.
-
----
-
-# 19.7 Known Issues
-
-Current known issues include:
-
-- Backup Engine has not yet been implemented.
-- Restore Engine has not yet been implemented.
-- API relationship mapping is still limited.
-- Authentication extraction requires additional validation against more HAR sessions.
-- Multi-project execution has not yet been tested.
-
-These issues are expected during the current development stage.
-
----
-
-# 19.8 Future Roadmap
-
-The long-term roadmap consists of the following major phases.
-
-## Phase 4
-
-Backup Engine
-
-Objectives
-
-- Resource download
-- API execution
-- Retry strategy
-- Pagination handling
-
----
-
-## Phase 5
-
-Report Generation
-
-Objectives
-
-- Execution report
-- HTML report
-- Statistics
-- Error reporting
-
----
-
-## Phase 6
-
-Export System
-
-Objectives
-
-- JSON export
-- HTML export
-- CSV export
-- Excel export
-- ZIP packaging
-
----
-
-## Phase 7
-
-Restore Engine
-
-Objectives
-
-- Restore resources
-- Validate backup
-- Recovery workflow
-
----
-
-## Phase 8
-
-Production Release
-
-Objectives
-
-- CLI stabilization
-- Documentation completion
-- Performance optimization
-- Version 1.0 release
-
----
-
-# 19.9 Success Criteria
-
-The project will be considered production-ready when the following criteria are satisfied.
-
-- Stable Workspace system
-- Complete Backup Engine
-- Functional Restore Engine
-- Comprehensive API catalog
-- Structured reporting
-- Export capabilities
-- Production documentation
-- Automated testing
-- Stable CLI
-
----
-
-# 19.10 Long-Term Vision
-
-Future versions may introduce:
-
-- Incremental backup
-- Differential backup
-- Parallel download
-- Cloud synchronization
-- Scheduling
-- Plugin architecture
-- GUI application
-- API server
-- Docker deployment
-- Multi-user support
-
-These items are outside the scope of Version 1.0.
-
----
-
-# End of Part 9
----
----
-
-# 20. Engineering Guidelines
-
-## 20.1 Purpose
-
-This chapter defines the operational rules that every contributor must follow throughout the development lifecycle.
-
-These guidelines ensure architectural consistency, maintainability, and long-term scalability.
-
-Unless explicitly approved, these rules should not be violated.
-
----
-
-# 20.2 Before Coding Checklist
-
-Before starting any implementation, verify the following:
-
-- [ ] Read the current PROJECT_CONTEXT.md.
-- [ ] Confirm the current development phase.
-- [ ] Confirm the current sprint objective.
-- [ ] Review existing Architecture Decision Records (ADR).
-- [ ] Verify module responsibility.
-- [ ] Ensure the proposed implementation belongs to the correct module.
-- [ ] Avoid duplicate functionality.
-- [ ] Confirm implementation aligns with the current roadmap.
-
-Coding should only begin after all items have been reviewed.
-
----
-
-# 20.3 During Coding Checklist
-
-While implementing new functionality:
-
-- [ ] Follow Single Responsibility Principle.
-- [ ] Keep functions small and predictable.
-- [ ] Use descriptive naming.
-- [ ] Avoid hardcoded values.
-- [ ] Add logging where appropriate.
-- [ ] Preserve module boundaries.
-- [ ] Keep business logic independent from infrastructure.
-- [ ] Avoid unnecessary dependencies.
-- [ ] Write maintainable code.
-
----
-
-# 20.4 Before Commit Checklist
-
-Before creating a Git commit:
-
-- [ ] Code executes successfully.
-- [ ] No syntax errors.
-- [ ] Imports are clean.
-- [ ] Logging reviewed.
-- [ ] Documentation updated (if required).
-- [ ] No temporary debugging code remains.
-- [ ] Commit message follows project convention.
-
----
-
-# 20.5 Before Release Checklist
-
-Before creating a release tag:
-
-- [ ] All planned features completed.
-- [ ] Documentation updated.
-- [ ] ROADMAP reviewed.
-- [ ] CHANGELOG updated.
-- [ ] TODO reviewed.
-- [ ] PROJECT_CONTEXT updated (if architecture changed).
-- [ ] All major tests completed.
-- [ ] Repository pushed to GitHub.
-
----
-
-# 20.6 Engineering Rules
-
-The following rules apply throughout the project.
-
-## Rule 1
-
-Architecture takes precedence over implementation speed.
-
----
-
-## Rule 2
-
-Documentation is part of the implementation.
-
----
-
-## Rule 3
-
-Parser modules remain pure.
-
-Parser modules must never manipulate project directories.
-
----
-
-## Rule 4
-
-Workspace owns the filesystem.
-
-No other module may create or organize project directories.
-
----
-
-## Rule 5
-
-Business modules remain independent.
-
-Modules communicate only through defined interfaces and artifacts.
-
----
-
-## Rule 6
-
-One module, one responsibility.
-
-If responsibilities begin to overlap, refactoring should be considered.
-
----
-
-## Rule 7
-
-Avoid unnecessary refactoring.
-
-Stable architecture is preferred over continuous restructuring.
-
----
-
-## Rule 8
-
-Preserve Git history.
-
-Meaningful commits are preferred over large undocumented changes.
-
----
-
-## Rule 9
-
-Every architectural change requires documentation.
-
-Major architectural changes should update:
-
-- PROJECT_CONTEXT.md
-- ADR (if applicable)
-- ARCHITECTURE.md (if applicable)
-
----
-
-## Rule 10
-
-Never sacrifice maintainability for short-term convenience.
-
----
-
-# 20.7 Project Terminology
-
-The following terminology is used consistently throughout the project.
-
-| Term | Definition |
-|------|------------|
-| Workspace | An isolated project created from a HAR session. |
-| Project | A single backup execution stored under `projects/`. |
-| Incoming | Directory containing new HAR files awaiting processing. |
-| Workspace Context | Standardized project information returned by the Workspace module. |
-| Request Catalog | Structured collection of discovered HTTP requests. |
-| Authentication Catalog | Structured authentication information extracted from requests. |
-| API Catalog | Structured API database built from discovered endpoints. |
-| Artifact | Any generated output consumed by another module. |
-| ADR | Architecture Decision Record. |
-| Pipeline | Ordered sequence of processing stages. |
-
----
-
-# 20.8 Definition of Done
-
-A development task is considered complete only when:
-
-- Implementation completed.
-- Local execution successful.
-- Documentation updated (if required).
-- Architecture remains consistent.
-- Commit created.
-- Changes pushed to GitHub.
-
-Completion is determined by engineering quality, not only by functional correctness.
-
----
-
-# 20.9 Future Expansion Principles
-
-Future features should follow these principles:
-
-- Extend existing architecture whenever appropriate.
-- Preserve module independence.
-- Avoid breaking established interfaces.
-- Maintain backward compatibility where practical.
-- Introduce new modules only when justified.
-
-Examples of potential future extensions include:
-
-- Incremental backup
-- Differential backup
-- Plugin system
-- Web API
-- Web Dashboard
-- GUI application
-- Docker deployment
-- Cloud synchronization
+- Knowledge Engine
+- Restore Runtime
+- Plugin System
 - Scheduler
-- Multi-user support
+- Multi-Project Management
+- Parallel Execution
+- Cloud Synchronization
+- Web Dashboard
+- API Service
+- Continuous Backup
+- Incremental Backup
+- Distributed Processing
 
-These features are intentionally outside the Version 1.0 scope.
-
----
-
-# 20.10 Document Maintenance
-
-PROJECT_CONTEXT.md is a living engineering document.
-
-It should be reviewed whenever:
-
-- A new architectural decision is accepted.
-- A major module is introduced.
-- The project workflow changes.
-- The roadmap changes significantly.
-
-Minor implementation changes generally do not require updates.
+Future expansion should integrate into the existing architecture without requiring major redesign.
 
 ---
 
-# 20.11 Closing Statement
+# 25. Scalability Strategy
 
-This document represents the collective engineering decisions made throughout the development of the Ruijie Cloud Backup Toolkit (RCBT).
+RCBT should scale in multiple dimensions.
 
-Its purpose is not only to describe the current system but also to preserve the reasoning, principles, and standards that guide future development.
+## Functional Scalability
 
-Every future implementation should aim to strengthen the architecture rather than work around it.
-
-The long-term success of the project depends on consistency, maintainability, and disciplined engineering practices.
+Support additional Ruijie Cloud services without changing existing architecture.
 
 ---
 
-**End of PROJECT_CONTEXT.md**
+## Customer Scalability
 
-**Document Status:** Active
-
-**Document Version:** 1.0
-
-**Maintainer:** Ryan Fajar
-
-**Project:** Ruijie Cloud Backup Toolkit (RCBT)
-
-**Single Source of Truth:** This document
+Support multiple customers while maintaining complete project isolation.
 
 ---
+
+## Engineering Scalability
+
+Support future contributors without increasing architectural complexity.
+
+---
+
+## Runtime Scalability
+
+Allow future optimization such as:
+
+- Parallel processing
+- Queue-based execution
+- Distributed workloads
+- Incremental execution
+
+without changing module responsibilities.
+
+---
+
+# 26. Maintainability Strategy
+
+Long-term maintainability is one of the primary engineering objectives.
+
+Maintainability is achieved through:
+
+- Modular architecture.
+- Single Responsibility Principle.
+- Explicit interfaces.
+- Stable contracts.
+- Documentation-driven engineering.
+- Consistent coding standards.
+- Predictable workflows.
+- Reproducible implementations.
+
+Engineering consistency is always preferred over implementation shortcuts.
+
+---
+
+# 27. Engineering Principles Summary
+
+Every engineering decision should support the following principles.
+
+## Architecture
+
+- Architecture First.
+- Separation of Concerns.
+- Single Responsibility.
+- Explicit Dependencies.
+- Stable Interfaces.
+
+---
+
+## Development
+
+- Documentation-Driven Engineering.
+- Git-Driven Development.
+- Incremental Development.
+- Production-Ready Implementation.
+
+---
+
+## Quality
+
+- Maintainability.
+- Scalability.
+- Reliability.
+- Testability.
+- Observability.
+- Backward Compatibility.
+
+---
+
+## Governance
+
+- Explicit Ownership.
+- Reproducible Development.
+- Engineering Traceability.
+- Long-Term Consistency.
+
+---
+
+# 28. Engineering Commitment
+
+Every implementation within RCBT should contribute toward the long-term health of the project.
+
+Engineering decisions should always consider:
+
+- Architectural impact.
+- Maintainability.
+- Scalability.
+- Future extensibility.
+- Backward compatibility.
+- Documentation consistency.
+
+Temporary solutions should never become permanent architecture.
+
+When trade-offs are unavoidable, they should be documented through Engineering Decisions (ADR).
+
+---
+
+# 29. Closing Statement
+
+PROJECT_CONTEXT.md defines the engineering identity of the Ruijie Cloud Backup Toolkit.
+
+It exists to preserve architectural consistency, engineering quality, and long-term maintainability throughout the lifetime of the project.
+
+This document intentionally avoids storing information that changes frequently.
+
+Dynamic project information belongs to dedicated documents such as:
+
+- SESSION_CONTEXT.md
+- ROADMAP.md
+- CHANGELOG.md
+- TODO.md
+- HISTORY/
+- DECISIONS/
+- TROUBLESHOOTING/
+
+Whenever implementation changes the long-term architecture, engineering philosophy, or project identity, this document should be reviewed and updated.
+
+---
+
+# Document Maintenance Policy
+
+PROJECT_CONTEXT.md should only be updated when one or more of the following changes occur:
+
+- Engineering philosophy changes.
+- Core architecture changes.
+- Module responsibility changes.
+- Long-term design principles change.
+- Engineering governance changes.
+- System boundaries change.
+
+Routine development progress must never require updates to this document.
+
+---
+
+# End of PROJECT_CONTEXT.md
+
+Version
+
+2.0
+
+Status
+
+Frozen
+
+Maintained By
+
+Project Owner & AI Engineering Partner
+
+Engineering Model
+
+Production-Grade Development
+
+Document Classification
+
+Engineering Context (Long-Term)
+
+Primary Source of Truth
+
+Repository Source Code
+
+Supporting Engineering Documents are authoritative only within their respective responsibilities defined by this document.
+
+- CHAT_BOOTSTRAP.md
+- SESSION_CONTEXT.md
+- PROJECT_CONTEXT.md
+- ARCHITECTURE.md
+- ROADMAP.md
+- CHANGELOG.md
+- TODO.md
