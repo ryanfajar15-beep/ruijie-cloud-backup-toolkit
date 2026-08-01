@@ -8,6 +8,7 @@ from __future__ import annotations
 import requests
 
 from .session_provider import SessionProvider
+from development.config.endpoint import Endpoint
 
 
 class LoginService:
@@ -33,9 +34,34 @@ class LoginService:
     def session(self) -> requests.Session:
         return self._session_provider.session
 
-    def load_login_page(self) -> None:
+    def request_login_page(
+        self,
+    ) -> requests.Response:
+        """
+        Request Ruijie login page.
+        """
+
+        response = self.session.get(
+            Endpoint.LOGIN_PAGE,
+        )
+
+        return response
+
+    def load_login_page(self) -> str:
         """
         Load login page.
+        """
+
+        response = self.request_login_page()
+
+        return response.text
+
+    def extract_rsa_key(
+        self,
+        html: str,
+    ) -> str:
+        """
+        Extract RSA public key from login page.
         """
 
         raise NotImplementedError
@@ -44,8 +70,11 @@ class LoginService:
         """
         Retrieve RSA public key.
         """
+        html = self.load_login_page()
 
-        raise NotImplementedError
+        return self.extract_rsa_key(
+            html,
+        )
 
     def encrypt_password(
         self,

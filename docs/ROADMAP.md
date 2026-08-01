@@ -1,149 +1,129 @@
-# Ruijie Cloud Backup Toolkit
+# Roadmap
 
-## Project Information
+## ✅ Phase 1 — Project Bootstrap
+Status: Completed
 
-| Item | Value |
-|------|-------|
-| Project | Ruijie Cloud Backup Toolkit |
-| Version | 0.2.0-dev |
-| Status | Active Development |
-| Current Phase | Phase 3 - Request Discovery |
+Membangun fondasi project.
 
 ---
 
-# Development Roadmap
+## ✅ Phase 2 — Workspace Manager
+Status: Completed
 
-## Phase 1 - Project Bootstrap
-**Status:** ✅ Completed
-
-### Objectives
-- Initialize Git repository
-- Create Python virtual environment
-- Install dependencies
-- Create project structure
-
-### Deliverables
-- Repository ready
-- requirements.txt
-- Folder structure
+Workspace lifecycle.
 
 ---
 
-## Phase 2 - HAR Loader
-**Status:** ✅ Completed
+## ✅ Phase 3 — HAR Import & Parser
+Status: Completed
 
-### Objectives
-- Validate HAR file
-- Load HAR
-- Read entries
-
-### Deliverables
-- HAR successfully loaded
-- Total entries detected: **326**
+Import HAR dan parsing request.
 
 ---
 
-## Phase 3 - Request Discovery
-**Status:** 🚧 In Progress
+## ✅ Phase 4 — Request Discovery
+Status: Completed
 
-### Objectives
-- Parse every HTTP request
-- Detect API endpoints
-- Group requests by method
-- Extract URL path
-- Extract query parameters
-- Extract request headers
-
-### Deliverables
-- request_catalog.json
+Request classification, endpoint discovery, catalog generation.
 
 ---
 
-## Phase 4 - Authentication Extraction
-**Status:** ⏳ Pending
+## ✅ Phase 5 — Authentication Strategy
+Status: Completed
 
-### Objectives
-- Extract Authorization
-- Extract Cookie
-- Extract CSRF Token
-- Extract Tenant ID
-- Extract Organization ID
-- Extract User Information
-
-### Deliverables
-- auth.json
+Authentication architecture dan login workflow.
 
 ---
 
-## Phase 5 - API Mapping
-**Status:** ⏳ Pending
+## ✅ Phase 6 — API Client Implementation
+Status: Completed
 
-### Objectives
-- Build API catalog
-- Analyze request schema
-- Analyze response schema
-- Identify endpoint relationships
+Deliverables:
 
-### Deliverables
-- api_catalog.json
-
----
-
-## Phase 6 - Backup Engine
-**Status:** ⏳ Pending
-
-### Objectives
-- Download cloud resources
-- Normalize data
-- Save backup files
-
-### Deliverables
-- backup/
+- Authentication Runtime
+- Session Provider
+- Login Service
+- Auth Client
+- Credential Management
+- Endpoint Configuration Foundation
+- API Runtime Foundation
+- Workflow Foundation
+- Runtime Architecture Stabilization
 
 ---
 
-## Phase 7 - Restore Engine
-**Status:** ⏳ Pending
+# 🚧 Phase 7 — Discovery Engine
 
-### Objectives
-- Restore configuration
-- Validate dependencies
-- Execute restore process
+Status: In Progress
 
-### Deliverables
-- restore.py
+Objective
 
----
+Menyelesaikan seluruh proses reverse engineering sehingga runtime
+tidak lagi bergantung langsung terhadap HAR.
 
-## Phase 8 - Exporter
-**Status:** ⏳ Pending
+Sub Phase
 
-### Objectives
-- Export JSON
-- Export CSV
-- Export Excel
-- Export HTML
+### Phase 7.0
 
----
+Discovery Finalization
 
-## Phase 9 - CLI
-**Status:** ⏳ Pending
+Target
 
-### Objectives
-- analyze
-- backup
-- restore
-- export
+- Authentication Discovery
+- RSA Discovery
+- Cookie Discovery
+- Redirect Discovery
+- Session Validation Discovery
+- Endpoint Discovery
+- Workflow Discovery
+- Storage Discovery
+- Render Discovery
+- Export Discovery
+- Download Discovery
+- Response Schema Discovery
 
-### Deliverables
-- CLI Application
+Output
+
+analysis/
 
 ---
 
-## Phase 10 - Release
-**Status:** ⏳ Pending
+### Phase 7.1
 
-### Target
-- Version 1.0.0
-- Documentation complete
-- Production ready
+Knowledge Engine
+
+Target
+
+Membangun Knowledge Layer sebagai source of truth runtime.
+
+Output
+
+development/knowledge/
+
+---
+
+### Phase 7.2
+
+Runtime Integration
+
+Target
+
+Mengintegrasikan seluruh runtime dengan Knowledge Engine.
+
+---
+
+### Phase 7.3
+
+Production Optimization
+
+Target
+
+Hardening.
+
+Optimization.
+
+Testing.
+
+Performance.
+
+Documentation.
