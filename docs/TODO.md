@@ -8,110 +8,99 @@ Completed work should be removed from this document and recorded in CHANGELOG.md
 
 # Current Phase
 
-Phase 7.0 — Discovery Finalization
+Phase 7.0 — Discovery Engine
+============================
 
-Status
-
-Active
-
----
-
-# Current Objective
-
+Current Objective
+-----------------
 Complete the Discovery Engine so that the Runtime Layer no longer depends directly on HAR files.
 
----
 
-# Authentication Discovery
+Current Task
+------------
+Stage 1 — API Catalog Discovery
+-------------------------------
 
-- [ ] Discover RSA endpoint
-- [ ] Analyze RSA request payload
-- [ ] Identify login page workflow
-- [ ] Identify login request sequence
-- [ ] Discover session cookie generation
-- [ ] Discover redirect workflow
-- [ ] Discover session validation endpoint
-- [ ] Generate Authentication Metadata
+[x] Wrapper Endpoint Discovery
+[x] API Endpoint Extraction
+[x] API Catalog Normalization
+[x] Module Discovery
 
----
+[x] Method Discovery
+[x] Request Count Analysis
+[x] Request Parameter Discovery
+[x] Response Type Discovery
+[x] API Classification
 
-# Endpoint Discovery
+[x] Generate api_catalog.json
 
-- [ ] Discover API endpoints
-- [ ] Classify endpoint categories
-- [ ] Detect endpoint relationships
-- [ ] Generate Endpoint Catalog
 
----
+Stage 2 — Authentication Metadata
+---------------------------------
 
-# Workflow Discovery
+[ ] Login Page Metadata
+[ ] RSA Metadata
+[ ] Hidden Fields Metadata
+[ ] Password Validation Metadata
+[ ] Login Request Metadata
+[ ] Session Cookie Metadata
+[ ] Session Validation Metadata
+[ ] Redirect Flow Metadata
 
-- [ ] Discover application workflows
-- [ ] Identify request dependencies
-- [ ] Build workflow relationships
-- [ ] Generate Workflow Metadata
+[ ] Generate authentication_catalog.json
 
----
 
-# Storage Discovery
+Stage 3 — Workflow Discovery
+----------------------------
 
-- [ ] Discover storage endpoints
-- [ ] Identify storage resources
-- [ ] Document storage workflow
+[ ] Project Workflow
+[ ] Survey Workflow
+[ ] Render Workflow
+[ ] Export Workflow
+[ ] Download Workflow
 
----
+[ ] Generate workflow_catalog.json
 
-# Render Discovery
 
-- [ ] Discover render endpoints
-- [ ] Document rendering workflow
+Stage 4 — Response Discovery
+----------------------------
 
----
+[ ] Response Schema Discovery
+[ ] Response Object Discovery
+[ ] Error Response Discovery
+[ ] Response Relationship Discovery
 
-# Export Discovery
+[ ] Generate response_catalog.json
 
-- [ ] Discover export endpoints
-- [ ] Document export workflow
 
----
+Stage 5 — Knowledge Assembly
+-----------------------------
 
-# Download Discovery
+[ ] API Catalog Validation
+[ ] Authentication Catalog Validation
+[ ] Workflow Catalog Validation
+[ ] Response Catalog Validation
 
-- [ ] Discover download endpoints
-- [ ] Document download workflow
+[ ] Cross Reference Validation
+[ ] Knowledge Consistency Validation
 
----
+[ ] Generate knowledge_index.json
 
-# Response Schema Discovery
 
-- [ ] Analyze response structures
-- [ ] Generate response schema catalog
-- [ ] Identify reusable models
+Stage 6 — Production Discovery Engine
+-------------------------------------
 
----
+[ ] API Discovery Engine
+[ ] Authentication Discovery Engine
+[ ] Workflow Discovery Engine
+[ ] Response Discovery Engine
+[ ] Knowledge Engine Integration
 
-# Discovery Metadata
+[ ] Unit Test
+[ ] Integration Test
+[ ] Documentation
 
-- [ ] Validate Authentication Metadata
-- [ ] Validate Endpoint Metadata
-- [ ] Validate Workflow Metadata
-- [ ] Validate Response Metadata
-- [ ] Validate Discovery consistency
 
----
-
-# Phase 7 Exit Criteria
-
-- [ ] Authentication Discovery completed
-- [ ] Endpoint Discovery completed
-- [ ] Workflow Discovery completed
-- [ ] Storage Discovery completed
-- [ ] Render Discovery completed
-- [ ] Export Discovery completed
-- [ ] Download Discovery completed
-- [ ] Response Schema Discovery completed
-- [ ] Discovery Metadata validated
-- [ ] Runtime Layer can execute without directly parsing HAR
 
 ---
 

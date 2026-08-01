@@ -6,7 +6,7 @@
 |------|-------|
 | Project | Ruijie Cloud Backup Toolkit (RCBT) |
 | Repository Branch | `main` |
-| Current Phase | Phase 7.0 — Discovery Finalization |
+| Current Phase | Phase 7.0 — Discovery Engine |
 | Status | Active |
 | Current Milestone | Discovery Engine |
 
@@ -35,15 +35,11 @@ The primary output of Phase 7.0 is a complete Discovery Metadata foundation that
 
 # 4. Current Focus
 
-## Discovery Finalization
+Primary Focus
 
-Primary focus
-
+- API Catalog Discovery
+- Wrapper Endpoint Discovery
 - Authentication Discovery
-- RSA Discovery
-- Cookie Discovery
-- Redirect Discovery
-- Session Validation
 - Endpoint Discovery
 - Workflow Discovery
 - Storage Discovery
@@ -58,32 +54,34 @@ Primary focus
 
 | Item | Value |
 |------|-------|
-| Task | Authentication Discovery |
+| Task | Stage 1 — API Catalog Discovery |
 | Status | In Progress |
 
 Checklist
 
-- [ ] RSA Endpoint Discovery
-- [ ] Login Page Discovery
-- [ ] Login Flow Validation
-- [ ] Session Cookie Discovery
-- [ ] Redirect Flow Discovery
-- [ ] Session Validation Endpoint
-- [ ] Authentication Metadata
+[ ] Wrapper Endpoint Discovery
+[ ] API Endpoint Extraction
+[ ] Module Discovery
+[ ] Method Discovery
+[ ] Request Count Analysis
+[ ] Parameter Discovery
+[ ] Response Discovery
+[ ] Authentication Requirement Discovery
+[ ] API Classification
+[ ] Generate api_catalog.json
 
 ---
 
 # 6. Next Tasks
 
-After Authentication Discovery is completed
-
-1. Endpoint Discovery
-2. Workflow Discovery
-3. Storage Discovery
-4. Render Discovery
-5. Export Discovery
-6. Download Discovery
-7. Response Schema Discovery
+1. Authentication Discovery
+2. Endpoint Discovery
+3. Workflow Discovery
+4. Storage Discovery
+5. Render Discovery
+6. Export Discovery
+7. Download Discovery
+8. Response Discovery
 
 ---
 
@@ -247,7 +245,7 @@ Runtime Layer must never depend directly on HAR files.
 All reverse engineering activities are performed using dedicated tools.
 
 ### ADR-006
-The Knowledge Engine will be implemented after Discovery Finalization is complete.
+The Knowledge Engine will be implemented after Phase 7.0 — Discovery Engine is complete.
 
 ---
 
@@ -260,7 +258,7 @@ Current engineering challenges
 - Authentication must be reverse engineered through the SSO workflow.
 - Some endpoints still require additional investigation.
 
-These limitations are being addressed during Discovery Finalization.
+These limitations are being addressed during the Discovery Engine implementation.
 
 ---
 
@@ -268,6 +266,7 @@ These limitations are being addressed during Discovery Finalization.
 
 Target Phase 7.0
 
+- API Catalog
 - Authentication Metadata
 - Endpoint Catalog
 - Workflow Catalog
@@ -354,8 +353,8 @@ Current engineering principles
 
 | Item | Value |
 |------|-------|
-| Current Phase | Phase 7.0 — Discovery Finalization |
+| Current Phase | Phase 7.0 — Discovery Engine |
 | Current Goal | Complete Ruijie Cloud reverse engineering |
-| Current Focus | Authentication Discovery |
+| Current Focus | API Catalog Discovery |
 | Next Milestone | Phase 7.1 — Knowledge Engine |
 | Project Status | Active Development |
