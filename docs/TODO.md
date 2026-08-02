@@ -44,8 +44,8 @@ Stage 2 — Authentication Metadata
 [x] Password Validation Metadata
 [x] Login Request Metadata
 [x] Domain Discovery
-[ ] Session Cookie Metadata
-[ ] Session Validation Metadata
+[x] Session Cookie Metadata
+[x] Session Validation Metadata
 [ ] Redirect Flow Metadata
 
 [ ] Generate authentication_catalog.json
