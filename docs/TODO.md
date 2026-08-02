@@ -53,12 +53,17 @@ Stage 2 — Authentication Metadata
 
 Stage 3 — Workflow Discovery
 ----------------------------
-
-[ ] Project Workflow
-[ ] Survey Workflow
-[ ] Render Workflow
-[ ] Export Workflow
-[ ] Download Workflow
+[x] Generate Tool Splitter HAR
+[x] Validate Split Result
+[x] Project Workflow
+[x] Survey Workflow
+[x] Render Workflow
+[x] Export Task Discovery
+[x] Export API Analysis
+    /plan/render/async/start
+    /plan/render/async/result
+[~] Export Workflow
+[~] Download Workflow
 
 [ ] Generate workflow_catalog.json
 
