@@ -111,6 +111,8 @@ docs/
 ├── ARCHITECTURE.md
 ├── ROADMAP.md
 ├── CHANGELOG.md
+├── ENGINEERING_MEMORY_GUIDE.md
+├── ENGINEERING_MEMORY.md
 ├── TODO.md
 ├── HISTORY/
 ├── DECISIONS/
@@ -162,13 +164,21 @@ docs/CHANGELOG.md
 
 8.
 
-docs/HISTORY/
+docs/ENGINEERING_MEMORY_GUIDE.md
 
 9.
 
+docs/ENGINEERING_MEMORY.md
+
+10
+
+docs/HISTORY/
+
+11.
+
 docs/DECISIONS/
 
-10.
+12.
 
 docs/TROUBLESHOOTING/
 
@@ -796,6 +806,7 @@ Minimal dokumen yang harus diperbarui sesuai kebutuhan:
 - CHANGELOG.md
 - TODO.md
 - SESSION_CONTEXT.md
+- ENGINEERING_MEMORY.md
 - HISTORY/*
 - DECISIONS/*
 - TROUBLESHOOTING/*
@@ -1184,6 +1195,10 @@ Minimal dokumen yang diunggah:
 docs/CHAT_BOOTSTRAP.md
 
 docs/SESSION_CONTEXT.md
+
+docs/ENGINEERING_MEMORY_GUIDE.md
+
+docs/ENGINEERING_MEMORY.md
 
 Jika diperlukan.
 

@@ -190,6 +190,11 @@ Read TODO.md
 Read CHANGELOG.md
         │
         ▼
+Read ENGINEERING_MEMORY_GUIDE.md
+        │
+        ▼
+Read ENGINEERING_MEMORY.md
+        ▼
 Repository Ready
 ```
 
@@ -210,6 +215,7 @@ Documentation updates shall follow these rules.
 | ARCHITECTURE.md | Architecture changes |
 | PROJECT_CONTEXT.md | Engineering vision changes |
 | CHAT_BOOTSTRAP.md | Workflow changes |
+| ENGINEERING_MEMORY.md | New engineering knowledge |
 | ADR | New architectural decisions |
 | HISTORY | Phase completion |
 
@@ -282,6 +288,12 @@ Review ROADMAP
         │
         ▼
 Review ARCHITECTURE
+        │
+        ▼
+Review ENGINEERING_MEMORY
+        │
+        ▼
+Update ENGINEERING_MEMORY
         │
         ▼
 Prepare Git Commit
