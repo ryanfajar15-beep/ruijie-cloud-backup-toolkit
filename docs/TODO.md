@@ -22,7 +22,7 @@ Completed work should be removed from this document and recorded in CHANGELOG.md
 
 # Current Phase
 
-Phase 7.0 — Discovery Engine
+Phase 7.0 — Discovery Finalization
 ============================
 
 Status
@@ -284,6 +284,11 @@ Production Validation
 
 [ ] Knowledge Engine Test
 [ ] Knowledge Integration Test
+
+
+Knowledge Assembly prepares validated Discovery Metadata for Phase 7.1 (Knowledge Engine).
+
+It does not implement the Knowledge Engine itself.
 
 ---
 

@@ -6,7 +6,7 @@
 |------|-------|
 | Project | Ruijie Cloud Backup Toolkit (RCBT) |
 | Repository Branch | `main` |
-| Current Phase | Phase 7.0 — Discovery Engine |
+| Current Phase | Phase 7.0 — Discovery Finalization |
 | Status | Active |
 | Current Milestone | Discovery Engine |
 
@@ -27,66 +27,31 @@
 
 # 3. Current Objective
 
-Complete the reverse engineering process of Ruijie Cloud so that the entire Runtime Layer can be built from structured Discovery metadata instead of directly depending on HAR files.
+Complete the reverse engineering process of Ruijie Cloud so that the Runtime Layer can operate entirely from structured Discovery Metadata instead of directly depending on HAR files.
 
-The primary output of Phase 7.0 is a complete Discovery Metadata foundation that will serve as the knowledge source for the future Knowledge Engine.
+The primary deliverable of Phase 7.0 is a complete Discovery Metadata foundation that will become the engineering knowledge source for the future Knowledge Engine.
 
 ---
 
 # 4. Current Focus
 
-Primary Focus
-
-- API Catalog Discovery
-- Wrapper Endpoint Discovery
-- Authentication Discovery
-- Endpoint Discovery
-- Workflow Discovery
-- Storage Discovery
-- Render Discovery
-- Export Discovery
-- Download Discovery
-- Response Schema Discovery
+Complete the Discovery Engine (Phase 7.0) by producing validated Discovery Metadata that serves as the engineering foundation for the future Knowledge Engine.
 
 ---
 
-# 5. Current Task
+# 5. Task Tracker
 
-| Item | Value |
-|------|-------|
-| Task | Stage 1 — API Catalog Discovery |
-| Status | In Progress |
+The active engineering task is maintained exclusively in:
 
-Checklist
+```text
+docs/TODO.md
+```
 
-[ ] Wrapper Endpoint Discovery
-[ ] API Endpoint Extraction
-[ ] Module Discovery
-[ ] Method Discovery
-[ ] Request Count Analysis
-[ ] Parameter Discovery
-[ ] Response Discovery
-[ ] Authentication Requirement Discovery
-[ ] API Classification
-[ ] Generate api_catalog.json
+All engineering implementation, validation, and production progress must follow the first unchecked checklist item in `docs/TODO.md`.
 
 ---
 
-# 6. Next Tasks
-
-1. Authentication Discovery
-2. Endpoint Discovery
-3. Workflow Discovery
-4. Storage Discovery
-5. Render Discovery
-6. Export Discovery
-7. Download Discovery
-8. Response Discovery
-
----
-
-
-# 7. Current Architecture
+# 6. Current Execution Pipeline
 
 ```text
 incoming/
@@ -123,65 +88,42 @@ This execution pipeline reflects the current technical architecture of RCBT.
 
 ---
 
-# 8. Runtime Architecture
+# 7. Runtime Rules
+
+Runtime Rules
+
+- HAR Importer imports HAR files into the Workspace.
+- HAR Parser interprets HAR data only.
+- Runtime Layer must never consume HAR files directly.
+- Runtime executes exclusively from Discovery Metadata.
+
+---
+
+# 8. Latest Completed
+
+## Phase 6 — API Runtime Foundation
+
+### Summary
+
+Phase 6 established the Runtime Foundation, including:
+
+- Authentication Runtime
+- Session Management
+- Login Service
+- Runtime Layer Foundation
+- Workflow Foundation
+
+### Details
+
+See:
 
 ```text
-backup.py
-        │
-        ▼
-Workspace
-        │
-        ▼
-HAR Importer
-        │
-        ▼
-HAR Parser
-        │
-        ▼
-Discovery Engine
-        │
-        ▼
-Runtime Layer
-        │
-        ▼
-Backup Workflow
-        │
-        ▼
-Report Layer
-        │
-        ▼
-Export Layer
+docs/CHANGELOG.md
 ```
 
-HAR Importer is responsible for importing HAR files into the Workspace.
-
-HAR Parser is responsible only for interpreting HAR data.
-
-Runtime Layer must never consume HAR files directly.
-
 ---
 
-# 9. Latest Completed
-
-Phase 6 successfully established the Runtime foundation.
-
-Completed Modules
-
-- Workspace
-- HAR Importer
-- Request Reader
-- Endpoint Normalizer
-- Credential Management
-- SessionProvider
-- LoginService
-- AuthClient Foundation
-- RenderClient
-- Workflow Foundation
-- API Runtime Foundation
-
----
-
-# 10. Current Repository Structure
+# 9. Current Repository Structure
 
 Main Controller
 
@@ -227,44 +169,33 @@ incoming/
 
 ---
 
-# 11. Current Decisions
+# 10. Current Decisions
 
-### ADR-001
-backup.py remains the Main Controller.
-
-### ADR-002
-All core application modules are located under the `development/` directory.
-
-### ADR-003
-HAR Parser is responsible only for interpreting HAR data.
-
-### ADR-004
-Runtime Layer must never depend directly on HAR files.
-
-### ADR-005
-All reverse engineering activities are performed using dedicated tools.
-
-### ADR-006
-The Knowledge Engine will be implemented after Phase 7.0 — Discovery Engine is complete.
+- **ADR-001** — `backup.py` remains the Main Controller.
+- **ADR-002** — All core application modules are located under `development/`.
+- **ADR-003** — HAR Parser is responsible only for interpreting HAR data.
+- **ADR-004** — Runtime Layer must never depend directly on HAR files.
+- **ADR-005** — All reverse engineering activities are performed using dedicated tools.
+- **ADR-006** — The Knowledge Engine will be implemented after Phase 7.0 — Discovery Finalization.
 
 ---
 
-# 12. Known Issues
+# 11. Known Issues
 
 Current engineering challenges
 
-- Ruijie HAR does not contain Session Cookies.
-- Ruijie HAR does not contain Authorization Headers.
+- HAR does not contain Session Cookies.
+- HAR does not contain Authorization Headers.
 - Authentication must be reverse engineered through the SSO workflow.
 - Some endpoints still require additional investigation.
 
-These limitations are being addressed during the Discovery Engine implementation.
+These limitations are being addressed during Phase 7.0.
 
 ---
 
-# 13. Current Deliverables
+# 12. Current Deliverables
 
-Target Phase 7.0
+Target outputs for Phase 7.0
 
 - API Catalog
 - Authentication Metadata
@@ -276,25 +207,25 @@ Target Phase 7.0
 - Download Route Discovery
 - Response Schema Discovery
 
-All Discovery outputs are stored under
+Discovery outputs are stored under:
 
 ```text
 analysis/
 ```
 
-These outputs will become the engineering foundation for the future Knowledge Engine.
+These artifacts will become the engineering foundation of the future Knowledge Engine.
 
 ---
 
-# 14. Next Milestone
+# 13. Next Milestone
 
-Phase 7.1 — Knowledge Engine
+## Phase 7.1 — Knowledge Engine
 
-Target
+### Objective
 
 Build the Knowledge Layer that becomes the primary engineering knowledge source consumed by the Runtime Layer.
 
-Expected Output
+### Expected Output
 
 ```text
 development/knowledge/
@@ -302,7 +233,7 @@ development/knowledge/
 
 ---
 
-# 15. Documentation Status
+# 14. Documentation Status
 
 Core Documents
 
@@ -316,45 +247,34 @@ Core Documents
 
 Supporting Documentation
 
-History
-
 ```text
 docs/HISTORY/
-```
-
-Architecture Decisions
-
-```text
 docs/DECISIONS/
-```
-
-Troubleshooting
-
-```text
 docs/TROUBLESHOOTING/
 ```
 
 ---
 
-# 16. Engineering Notes
+# 15. Current Engineering Principles
 
-Current engineering principles
+Engineering Principles
 
-- Development follows the official project roadmap.
-- Architectural changes require documented engineering decisions (ADR).
+- Follow the approved project roadmap.
+- Architectural changes require ADRs.
 - Commits represent completed engineering milestones.
 - Every implementation must be production-ready.
-- Discovery Metadata becomes the engineering foundation for the future Knowledge Engine.
-- Runtime Layer must consume structured Discovery outputs instead of raw HAR files whenever practical.
+- Discovery Metadata is the engineering foundation for the future Knowledge Engine.
+- Runtime Layer consumes Discovery Metadata rather than raw HAR files.
 
 ---
 
-# 17. Current Status Summary
+# 16. Current Status Summary
 
 | Item | Value |
 |------|-------|
-| Current Phase | Phase 7.0 — Discovery Engine |
-| Current Goal | Complete Ruijie Cloud reverse engineering |
-| Current Focus | API Catalog Discovery |
-| Next Milestone | Phase 7.1 — Knowledge Engine |
+| Current Phase | Phase 7.0 — Discovery Finalization |
+| Current Milestone | Discovery Engine |
 | Project Status | Active Development |
+| Task Tracker | `docs/TODO.md` |
+| Next Milestone | Phase 7.1 — Knowledge Engine |
+| Repository Status | Active Development |

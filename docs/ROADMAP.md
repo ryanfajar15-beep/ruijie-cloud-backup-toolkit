@@ -148,18 +148,12 @@ Complete all Discovery components.
 
 Target
 
+- API Discovery
 - Authentication Discovery
-- RSA Discovery
-- Cookie Discovery
-- Redirect Discovery
-- Session Validation Discovery
-- Endpoint Discovery
 - Workflow Discovery
-- Storage Discovery
-- Render Discovery
-- Export Discovery
-- Download Discovery
-- Response Schema Discovery
+- Response Discovery
+- Knowledge Assembly
+- Production Discovery Engine
 
 Output
 

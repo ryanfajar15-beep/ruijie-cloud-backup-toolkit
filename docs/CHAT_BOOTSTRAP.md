@@ -8,11 +8,11 @@ File ini adalah entry point ketika melanjutkan project RCBT dari chat baru.
 
 Fungsi utama:
 
-- memberikan pemahaman project
-- menjaga architecture consistency
-- menjelaskan development workflow
-- menjelaskan aturan implementasi
-- menjaga dokumentasi engineering
+- memberikan startup context
+- mendefinisikan AI working rules
+- menetapkan source of truth
+- menentukan context reading order
+- menjaga konsistensi engineering
 
 ---
 
@@ -57,14 +57,6 @@ AI wajib mengikuti aturan berikut selama pengembangan RCBT.
 - Jangan membuat asumsi authentication.
 - Gunakan hasil reverse engineering HAR sebagai acuan.
 - Runtime tidak boleh dibangun berdasarkan dugaan.
-
-## Git Workflow Rules
-
-- Jangan membuat commit sebelum phase selesai.
-- Ikuti Git workflow project.
-- Update CHANGELOG setiap phase selesai.
-- Update ROADMAP jika phase berubah.
-- Update SESSION_CONTEXT jika berpindah milestone.
 
 ---
 
@@ -120,11 +112,7 @@ docs/
 
 Source Priority
 
-1. Repository Source Code
-2. SESSION_CONTEXT.md
-3. Project Documentation
-4. History & Decisions
-5. Chat Conversation
+Project Documentation refers to the engineering documentation maintained under `docs/`.
 
 Jika terjadi perbedaan antara repository dengan chat, repository menjadi acuan utama.
 
@@ -132,57 +120,23 @@ Jika terjadi perbedaan antara repository dengan chat, repository menjadi acuan u
 
 # Context Reading Order
 
-Saat membuka chat baru AI wajib membaca dokumen dengan urutan berikut:
+Required
 
-1.
+1. CHAT_BOOTSTRAP.md
+2. SESSION_CONTEXT.md
+3. PROJECT_CONTEXT.md
+4. ARCHITECTURE.md
+5. ROADMAP.md
+6. TODO.md
+7. CHANGELOG.md
 
-docs/CHAT_BOOTSTRAP.md
+Optional (Engineering Knowledge)
 
-2.
-
-docs/SESSION_CONTEXT.md
-
-3.
-
-docs/PROJECT_CONTEXT.md
-
-4.
-
-docs/ARCHITECTURE.md
-
-5.
-
-docs/ROADMAP.md
-
-6.
-
-docs/TODO.md
-
-7.
-
-docs/CHANGELOG.md
-
-8.
-
-docs/ENGINEERING_MEMORY_GUIDE.md
-
-9.
-
-docs/ENGINEERING_MEMORY.md
-
-10
-
-docs/HISTORY/
-
-11.
-
-docs/DECISIONS/
-
-12.
-
-docs/TROUBLESHOOTING/
-
-Tujuan
+- ENGINEERING_MEMORY_GUIDE.md
+- ENGINEERING_MEMORY.md
+- HISTORY/
+- DECISIONS/
+- TROUBLESHOOTING/
 
 Melanjutkan project dari kondisi terakhir tanpa mengulang investigasi maupun keputusan engineering yang telah selesai.
 
@@ -198,6 +152,23 @@ SESSION_CONTEXT.md provides project summary only.
 If a conflict exists between SESSION_CONTEXT.md and TODO.md, TODO.md is authoritative for active engineering tasks.
 
 AI must always continue from the first unchecked checklist item in TODO.md unless explicitly instructed otherwise.
+
+---
+
+Bootstrap Principle
+-------------------
+
+CHAT_BOOTSTRAP.md defines startup rules only.
+
+It intentionally does not duplicate engineering workflow, project architecture, roadmap, or implementation details.
+
+Those responsibilities belong to:
+
+- `PROJECT_CONTEXT.md`
+- `ARCHITECTURE.md`
+- `AI_WORKFLOW.md`
+- `SESSION_CONTEXT.md`
+- `TODO.md`
 
 ---
 
@@ -451,43 +422,15 @@ Phase selesai, telah diuji, terdokumentasi, dan siap dilanjutkan ke phase beriku
 
 # Current Phase Rule
 
-Status project tidak ditentukan dari CHAT_BOOTSTRAP.md.
-
-Sumber utama status project adalah:
-
-docs/SESSION_CONTEXT.md
-
-SESSION_CONTEXT.md wajib menjadi referensi utama untuk:
+SESSION_CONTEXT.md is the authoritative source for:
 
 - Current Phase
-- Current Sub Phase
 - Current Milestone
-- Current Task
-- Completed Task
-- Blocker
-- Next Action
-- Current Git Branch
-- Last Commit
+- Repository Metadata
 
-Jika terdapat perbedaan antara CHAT_BOOTSTRAP.md dan SESSION_CONTEXT.md, maka SESSION_CONTEXT.md menjadi acuan utama.
+Active engineering tasks are maintained exclusively in:
 
----
-
-# Phase Completion Rule
-
-Major Phase tidak boleh dinyatakan selesai apabila masih terdapat Sub Phase yang belum selesai.
-
-Sebuah Phase hanya dapat berubah menjadi COMPLETED apabila memenuhi seluruh syarat berikut:
-
-- Semua Sub Phase selesai.
-- Seluruh implementasi telah selesai.
-- Testing berhasil.
-- Tidak ada blocker kritis.
-- Dokumentasi telah diperbarui.
-- CHANGELOG telah diperbarui.
-- SESSION_CONTEXT.md telah diperbarui.
-- HISTORY Phase telah dibuat.
-- Seluruh perubahan telah di-review.
+docs/TODO.md
 
 ---
 
@@ -516,202 +459,6 @@ Checklist
 [ ] SESSION_CONTEXT.md telah diperbarui.
 
 [ ] TODO telah diperbarui.
-
----
-
-# Development Workflow
-
-Seluruh implementasi wajib mengikuti workflow berikut.
-
-Analysis
-
-↓
-
-Design
-
-↓
-
-Architecture Decision
-
-↓
-
-Implementation
-
-↓
-
-Validation
-
-↓
-
-Testing
-
-↓
-
-Documentation
-
-↓
-
-Git Commit
-
-Tidak diperbolehkan melakukan Git Commit sebelum seluruh tahapan di atas selesai.
-
----
-
-# Testing Rule
-
-Setiap implementasi wajib memiliki langkah testing yang jelas.
-
-Minimal terdiri dari:
-
-- Run Command
-- Validation Command
-- Expected Result
-
-Jika implementasi belum dapat diuji.
-
-AI wajib menjelaskan alasannya.
-
----
-
-# Repository Response Rule
-
-Jika perubahan tidak menyentuh repository.
-
-Berikan:
-
-- Analisis.
-- Penjelasan.
-- Rekomendasi.
-- Keputusan teknis.
-
-Jika perubahan menyentuh repository.
-
-AI wajib memberikan:
-
-- Kirim file lengkap.
-- Berikan executable command.
-- Berikan validation command.
-- Berikan run command.
-- Berikan Git command (jika Phase telah selesai).
-
-AI tidak boleh:
-
-- Meminta user mencari line number.
-- Meminta user mencari posisi kode.
-- Meminta edit manual.
-- Memberikan patch yang tidak lengkap.
-- Memberikan potongan kode yang tidak dapat langsung digunakan.
-
-Jika file terlalu panjang.
-
-AI wajib menggunakan format:
-
-Part 1/x
-
-Part 2/x
-
-Part 3/x
-
-Setiap Part harus dapat langsung di-copy-paste.
-
----
-
-# Response Format Rule
-
-Setiap implementasi repository wajib menggunakan format berikut.
-
-📌 Phase X.X
-
-Action
-(Create / Update / Replace)
-
-Update File
-
-<path file>
-
-<isi file lengkap atau Part x/x>
-
-Run
-
-<command>
-
-Validation
-
-<command>
-
-Commit
-
-<hanya jika Phase telah selesai>
-
----
-
-# Repository Modification Strategy
-
-Seluruh perubahan repository harus mengikuti prioritas berikut.
-
-Priority
-
-1. Python Automation
-2. Python Replacement
-3. Full File Generator
-4. Heredoc
-5. Manual Edit (hanya jika benar-benar diperlukan)
-
-Hindari:
-
-- nano untuk file panjang.
-- edit manual pada file repository.
-- mencari line number.
-- mencari posisi block secara manual.
-- copy-paste ke tengah file.
-- patch yang tidak dapat langsung digunakan.
-
-Tujuan:
-
-- reproducible
-- mengurangi human error
-- menjaga konsistensi
-- mempermudah automation
-- mempermudah rollback
-
----
-
-# Long File Rule
-
-Jika file terlalu panjang.
-
-AI wajib menggunakan format berikut.
-
-Part 1/x
-
-Part 2/x
-
-Part 3/x
-
-dst.
-
-Setiap Part wajib:
-
-- memiliki urutan yang jelas.
-- dapat langsung di-copy-paste.
-- tidak membutuhkan edit manual.
-- tidak menghilangkan import.
-- tidak menghilangkan comment penting.
-- tidak memotong function atau class.
-
-Jika memungkinkan.
-
-AI lebih memilih mengirim file penuh dibanding patch.
-
----
-
-# Documentation Rule
-
-Dokumentasi merupakan bagian dari development lifecycle.
-
-Dokumentasi tidak boleh dianggap sebagai pekerjaan setelah coding selesai.
-
-Setiap perubahan architecture, workflow, ataupun engineering decision wajib diikuti pembaruan dokumentasi yang relevan.
 
 ---
 
@@ -795,34 +542,6 @@ Dampak terhadap:
 - Maintainability
 - Scalability
 - Backward Compatibility
-
----
-
-# Documentation Update Rule
-
-AI wajib memperbarui dokumentasi sesuai perubahan project.
-
-Perubahan yang wajib diikuti update dokumentasi:
-
-- Phase berubah.
-- Architecture berubah.
-- Workflow berubah.
-- Folder Structure berubah.
-- Engineering Decision baru.
-- Technical Debt baru.
-- Known Issue baru.
-- Milestone selesai.
-
-Minimal dokumen yang harus diperbarui sesuai kebutuhan:
-
-- ROADMAP.md
-- CHANGELOG.md
-- TODO.md
-- SESSION_CONTEXT.md
-- ENGINEERING_MEMORY.md
-- HISTORY/*
-- DECISIONS/*
-- TROUBLESHOOTING/*
 
 ---
 
@@ -923,10 +642,11 @@ Saat melanjutkan project RCBT.
 
 AI wajib:
 
-- Membaca seluruh context terlebih dahulu.
+- Membaca seluruh required context terlebih dahulu.
+- Membaca engineering knowledge bila diperlukan.
 - Memahami Current Phase.
 - Memahami Current Milestone.
-- Memahami Current Task.
+- Determine the active engineering task from docs/TODO.md.
 - Memahami arsitektur project.
 - Mengikuti seluruh keputusan engineering sebelumnya.
 - Menjaga backward compatibility.
@@ -940,72 +660,6 @@ Repository menjadi acuan utama.
 
 ---
 
-# AI Response Rule
-
-Jika hanya membutuhkan diskusi.
-
-Berikan:
-
-- Analisis.
-- Pertimbangan.
-- Risiko.
-- Trade-off.
-- Rekomendasi.
-
-Jika membutuhkan perubahan repository.
-
-AI wajib memberikan:
-
-📌 Phase
-
-Action
-
-Create / Update / Replace
-
-Update File
-
-<path>
-
-<file lengkap atau Part x/x>
-
-Run
-
-<command>
-
-Validation
-
-<command>
-
-Commit
-
-<hanya jika Phase telah selesai>
-
-AI tidak boleh memberikan potongan kode yang mengharuskan user mencari lokasi secara manual.
-
----
-
-# Response Priority
-
-Urutan prioritas jawaban.
-
-1. Executable Command
-2. Full File / Part x/x
-3. Validation Command
-4. Git Workflow
-5. Technical Explanation
-
-Penjelasan diberikan apabila:
-
-- terdapat keputusan arsitektur.
-- terdapat trade-off.
-- terdapat risiko teknis.
-- terdapat perubahan workflow.
-- terdapat perubahan engineering decision.
-
-Hindari penjelasan panjang apabila tidak diminta secara eksplisit.
-
----
-
 # AI Quality Standard
 
 Sebelum memberikan implementasi.
@@ -1015,6 +669,7 @@ AI wajib memastikan:
 - Selaras dengan arsitektur project.
 - Mengikuti ROADMAP.
 - Mengikuti SESSION_CONTEXT.
+- Mengikuti TODO.md sebagai Engineering Task Tracker.
 - Mengikuti keputusan pada DECISIONS.
 - Tidak membuat asumsi.
 - Tidak menghasilkan duplicate module.
@@ -1027,174 +682,6 @@ AI wajib menjelaskan alasannya terlebih dahulu sebelum memberikan implementasi.
 
 ---
 
-# Reproducible Change Rule
-
-Seluruh perubahan repository harus dapat direproduksi dari terminal.
-
-Prioritas implementasi:
-
-1. Python Automation
-2. Python Replacement
-3. Full File Generator
-4. Heredoc
-5. Manual Edit (opsi terakhir)
-
-Contoh
-
-Create File
-
-Python Generator
-
-Update File
-
-Python Replacement
-
-Replace File
-
-Full File Generator
-
-Large File
-
-Part 1/x
-
-Part 2/x
-
-Part 3/x
-
-Validation
-
-Explicit Validation Command
-
-AI harus menghindari perubahan yang tidak dapat direproduksi.
-
----
-
-# Git Workflow Rule
-
-Seluruh milestone development wajib mengikuti Git workflow.
-
-Workflow
-
-1. Review perubahan
-
-git status
-
-2. Stage
-
-git add <file>
-
-atau
-
-git add .
-
-3. Commit
-
-git commit -m "<message>"
-
-4. Push
-
-git push
-
-AI tidak boleh meminta commit apabila:
-
-- Phase belum selesai.
-- Testing belum selesai.
-- Validation belum selesai.
-- Dokumentasi belum diperbarui.
-
----
-
-# Repository Metadata Rule
-
-Setiap selesai milestone atau phase.
-
-AI wajib memperbarui metadata repository pada:
-
-docs/SESSION_CONTEXT.md
-
-Field yang wajib diperbarui:
-
-- Repository Branch
-- Git HEAD
-- Last Commit
-- Last Update
-
-Contoh
-
-Repository Branch
-
-main
-
-Git HEAD
-
-7970ee6
-
-Last Commit
-
-docs(roadmap): close phase 6 and start phase 7
-
-Last Update
-
-2026-08-01
-
-Metadata repository harus selalu sinkron dengan kondisi repository aktual.
-
----
-
-# Documentation Synchronization Rule
-
-Sebelum Git Commit.
-
-AI wajib memastikan dokumentasi telah sinkron.
-
-Minimal:
-
-- SESSION_CONTEXT.md
-- ROADMAP.md
-- CHANGELOG.md
-- TODO.md
-
-Jika Phase selesai.
-
-AI juga wajib:
-
-- membuat HISTORY phase.
-- memperbarui Git Metadata.
-- memperbarui Current Phase.
-- memperbarui Current Task.
-- memperbarui Next Milestone.
-
-Dokumentasi harus selesai sebelum Git Commit dilakukan.
-
----
-
-# Commit Principle
-
-Setiap commit harus:
-
-- menjelaskan tujuan perubahan.
-- menggunakan Conventional Commit.
-- menggambarkan perubahan secara ringkas.
-- konsisten dengan phase aktif.
-
-Contoh
-
-feat(auth): implement login service
-
-fix(session): resolve cookie persistence
-
-refactor(api): extract render client
-
-docs(phase): close phase 6
-
-docs(roadmap): start phase 7
-
-test(authentication): validate login workflow
-
-Commit besar yang mencampur banyak pekerjaan harus dihindari.
-
----
-
 # Chat Transfer Protocol
 
 Ketika berpindah chat.
@@ -1203,29 +690,35 @@ AI tidak boleh meminta user menjelaskan ulang history project.
 
 AI harus menggunakan dokumentasi project sebagai sumber utama.
 
-Minimal dokumen yang diunggah:
+## Required
 
 docs/CHAT_BOOTSTRAP.md
 
 docs/SESSION_CONTEXT.md
 
-docs/ENGINEERING_MEMORY_GUIDE.md
-
-docs/ENGINEERING_MEMORY.md
-
-Jika diperlukan.
-
-Tambahkan:
-
 docs/PROJECT_CONTEXT.md
+
+docs/TODO.md
+
+## Recommended
 
 docs/ARCHITECTURE.md
 
 docs/ROADMAP.md
 
-History Phase terakhir.
+docs/CHANGELOG.md
 
-Decision terakhir (jika ada).
+## Optional (Engineering Knowledge)
+
+docs/ENGINEERING_MEMORY_GUIDE.md
+
+docs/ENGINEERING_MEMORY.md
+
+docs/HISTORY/
+
+docs/DECISIONS/
+
+docs/TROUBLESHOOTING/
 
 Dengan dokumen tersebut AI harus dapat melanjutkan project tanpa mengulang investigasi.
 
@@ -1247,151 +740,49 @@ AI wajib memahami urutan berikut.
 
 5. Current Milestone
 
-6. Active Task
+6. Engineering Task Tracker
 
 7. Previous Decisions
 
-8. Development Workflow
+8. AI Workflow
 
 9. Roadmap
 
 10. Current Repository State
 
-Sumber informasi
+## Sumber Informasi
 
-CHAT_BOOTSTRAP.md
+| Document | Purpose |
+|----------|---------|
+| CHAT_BOOTSTRAP.md | AI startup contract dan startup rules. |
+| SESSION_CONTEXT.md | Current project snapshot. |
+| PROJECT_CONTEXT.md | Engineering constitution dan long-term project context. |
+| ARCHITECTURE.md | Technical architecture dan module responsibilities. |
+| ROADMAP.md | Long-term development roadmap. |
+| TODO.md | Engineering Task Tracker (Single Source of Truth untuk active engineering tasks). |
+| AI_WORKFLOW.md | Engineering workflow and lifecycle. |
+| CHANGELOG.md | Completed engineering milestones. |
+| HISTORY/ | Historical engineering summary per phase. |
+| DECISIONS/ | Architecture Decision Records (ADR). |
+| Repository Source Code | Actual implementation (Primary Source of Truth). |
 
-Aturan kerja AI.
+## Source Priority
 
-SESSION_CONTEXT.md
-
-Status project saat ini.
-
-PROJECT_CONTEXT.md
-
-Gambaran project.
-
-ARCHITECTURE.md
-
-Arsitektur project.
-
-ROADMAP.md
-
-Target pengembangan.
-
-CHANGELOG.md
-
-Riwayat perubahan.
-
-HISTORY/
-
-Ringkasan setiap phase.
-
-DECISIONS/
-
-Keputusan engineering.
-
-Repository Source Code
-
-Implementasi aktual.
-
-Jika terjadi konflik.
-
-Prioritas acuan adalah:
+Jika terjadi konflik, gunakan prioritas berikut:
 
 1. Repository Source Code
-
 2. SESSION_CONTEXT.md
+3. TODO.md
+4. PROJECT_CONTEXT.md
+5. ARCHITECTURE.md
+6. ROADMAP.md
+7. CHANGELOG.md
+8. AI_WORKFLOW.md
+9. HISTORY/
+10. DECISIONS/
+11. Chat Conversation
 
-3. PROJECT_CONTEXT.md
-
-4. ARCHITECTURE.md
-
-5. ROADMAP.md
-
-6. HISTORY
-
-7. Chat Conversation
-
-Repository selalu menjadi source of truth.
-
----
-
-# Phase Completion Final Checklist
-
-Sebelum suatu Phase dinyatakan COMPLETED.
-
-Seluruh checklist berikut wajib terpenuhi.
-
-## Development
-
-[ ] Objective tercapai.
-
-[ ] Scope Phase selesai.
-
-[ ] Seluruh implementasi selesai.
-
-[ ] Validation berhasil.
-
-[ ] Testing berhasil.
-
-[ ] Tidak ada unresolved blocker.
-
----
-
-## Investigation
-
-[ ] Seluruh investigasi terdokumentasi.
-
-[ ] Error penting telah dicatat.
-
-[ ] Root Cause telah ditemukan.
-
-[ ] Solution telah didokumentasikan.
-
-[ ] Lessons Learned telah dicatat.
-
----
-
-## Documentation
-
-[ ] HISTORY document dibuat.
-
-[ ] ADR / DECISION document dibuat jika diperlukan.
-
-[ ] TROUBLESHOOTING document dibuat jika diperlukan.
-
-[ ] CHANGELOG.md diperbarui.
-
-[ ] ROADMAP.md diperbarui.
-
-[ ] TODO.md diperbarui.
-
----
-
-## Context
-
-[ ] SESSION_CONTEXT.md diperbarui.
-
-[ ] PROJECT_CONTEXT.md diperbarui jika diperlukan.
-
-[ ] CHAT_BOOTSTRAP.md diperbarui apabila terdapat perubahan workflow atau engineering rules.
-
----
-
-## Git
-
-[ ] Git HEAD diperbarui.
-
-[ ] Last Commit diperbarui.
-
-[ ] Last Update diperbarui.
-
-[ ] git status bersih.
-
-[ ] Commit dibuat.
-
-[ ] Push berhasil.
+Repository Source Code selalu menjadi Primary Source of Truth.
 
 ---
 
@@ -1504,8 +895,8 @@ AI tidak perlu meminta user mengulang konteks project.
 
 AI langsung:
 
-- melanjutkan Current Phase.
-- melanjutkan Active Task.
+- Memahami Current Phase dari SESSION_CONTEXT.md.
+- Continue from the first unchecked checklist item in docs/TODO.md.
 - mengikuti seluruh Engineering Rules.
 - menjaga konsistensi arsitektur.
 - menjaga kualitas dokumentasi.

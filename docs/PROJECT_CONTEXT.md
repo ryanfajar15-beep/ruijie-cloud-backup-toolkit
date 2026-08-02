@@ -17,49 +17,11 @@
 | Document | PROJECT_CONTEXT.md |
 | Project | Ruijie Cloud Backup Toolkit (RCBT) |
 | Document Type | Engineering Context Document |
-| Status | FREZZE |
+| Status | FROZEN |
 | Version | 2.0 |
 | Language | English |
 | Audience | Project Owner, Software Engineers, AI Assistants, Future Contributors |
 | Priority | Highest |
-
----
-
-# 2. Document Responsibility
-
-PROJECT_CONTEXT.md defines the long-term engineering identity of the project.
-
-This document is intended to remain stable throughout the project lifecycle.
-
-It describes:
-
-- Engineering philosophy
-- Architecture
-- Design principles
-- Module responsibilities
-- Engineering standards
-- Development workflow
-- Architecture Decision Records (ADR)
-- Long-term engineering guidelines
-
-This document intentionally does **NOT** store frequently changing information.
-
-The following information belongs to other documents:
-
-| Information | Document |
-|------------|----------|
-| Current Phase | SESSION_CONTEXT.md |
-| Current Task | SESSION_CONTEXT.md |
-| Current Milestone | SESSION_CONTEXT.md |
-| Git Metadata | SESSION_CONTEXT.md |
-| Roadmap Progress | ROADMAP.md |
-| Completed Work | CHANGELOG.md |
-| Active Tasks | TODO.md |
-| Phase History | HISTORY/ |
-| Architecture Decisions | DECISIONS/ |
-| Troubleshooting | TROUBLESHOOTING/ |
-
-Whenever information changes frequently, it should not be stored in PROJECT_CONTEXT.md.
 
 ---
 
@@ -495,6 +457,10 @@ tests/
 | `tests/` | Automated testing |
 
 
+This structure represents the repository root only.
+
+Individual subsystem architectures are documented separately.
+
 # 14. High-Level System Architecture
 
 ## 14.1 Architectural Overview
@@ -859,25 +825,6 @@ Discovery does not execute runtime behavior.
 The Runtime Layer consumes structured outputs produced by Discovery.
 
 Runtime should remain independent from raw HAR data whenever practical.
-
----
-
-# 14.5 Long-Term Architecture Direction
-
-The architecture has been intentionally designed for future expansion.
-
-Future capabilities may include:
-
-- Knowledge Engine
-- Restore Runtime
-- Plugin System
-- Parallel Execution
-- Scheduler
-- Cloud Synchronization
-- API Server
-- Web Dashboard
-
-These future capabilities should integrate without requiring major architectural redesign.
 
 ---
 
@@ -2171,42 +2118,7 @@ Avoid
 
 ---
 
-# 19. Development Workflow
-
-Every implementation follows the same engineering workflow.
-
-```text
-Analysis
-        │
-        ▼
-Design
-        │
-        ▼
-Engineering Decision
-        │
-        ▼
-Implementation
-        │
-        ▼
-Testing
-        │
-        ▼
-Validation
-        │
-        ▼
-Documentation
-        │
-        ▼
-Git Commit
-```
-
-Skipping workflow stages is discouraged.
-
-Each stage provides the foundation for the next stage.
-
----
-
-# 20. Quality Standards
+# 19. Quality Standards
 
 Every implementation should satisfy the following quality attributes.
 
@@ -2260,7 +2172,7 @@ Breaking changes require engineering review.
 
 ---
 
-# 21. Engineering Decision Process
+# 20. Engineering Decision Process
 
 Major engineering decisions should follow a structured process.
 
@@ -2287,19 +2199,19 @@ Significant architectural decisions should be documented as ADR (Architecture De
 
 ---
 
-# 22. Documentation Governance
+# 21. Documentation Governance
 
 Every document has a specific responsibility.
 
-| Document | Responsibility |
+| Document | Primary Responsibility |
 |----------|----------------|
 | CHAT_BOOTSTRAP.md | AI Working Rules & Engineering Constitution |
-| SESSION_CONTEXT.md | Current Project Status |
+| SESSION_CONTEXT.md | Current Project Snapshot |
 | PROJECT_CONTEXT.md | Long-term Engineering Context |
 | ARCHITECTURE.md | System Architecture |
 | ROADMAP.md | Development Roadmap |
 | CHANGELOG.md | Engineering History |
-| TODO.md | Active Tasks |
+| TODO.md | Engineering Task Tracker |
 | HISTORY/ | Phase Documentation |
 | DECISIONS/ | Architecture Decision Records |
 | TROUBLESHOOTING/ | Engineering Knowledge Base |
@@ -2308,9 +2220,10 @@ Information should always be stored in the document responsible for that informa
 
 Avoid duplicating information across multiple documents.
 
+
 ---
 
-# 23. AI-Assisted Development
+# 22. AI-Assisted Development
 
 AI is considered an engineering partner.
 
@@ -2338,7 +2251,7 @@ AI should not
 
 # End of Part 7
 
-# 24. Long-Term Architecture Direction
+# 23. Long-Term Architecture Direction
 
 RCBT has been intentionally designed as an extensible engineering platform.
 
@@ -2363,7 +2276,7 @@ Future expansion should integrate into the existing architecture without requiri
 
 ---
 
-# 25. Scalability Strategy
+# 24. Scalability Strategy
 
 RCBT should scale in multiple dimensions.
 
@@ -2398,7 +2311,7 @@ without changing module responsibilities.
 
 ---
 
-# 26. Maintainability Strategy
+# 25. Maintainability Strategy
 
 Long-term maintainability is one of the primary engineering objectives.
 
@@ -2417,7 +2330,7 @@ Engineering consistency is always preferred over implementation shortcuts.
 
 ---
 
-# 27. Engineering Principles Summary
+# 26. Engineering Principles Summary
 
 Every engineering decision should support the following principles.
 
@@ -2460,7 +2373,7 @@ Every engineering decision should support the following principles.
 
 ---
 
-# 28. Engineering Commitment
+# 27. Engineering Commitment
 
 Every implementation within RCBT should contribute toward the long-term health of the project.
 
@@ -2479,7 +2392,7 @@ When trade-offs are unavoidable, they should be documented through Engineering D
 
 ---
 
-# 29. Closing Statement
+# 28. Closing Statement
 
 PROJECT_CONTEXT.md defines the engineering identity of the Ruijie Cloud Backup Toolkit.
 
@@ -2499,6 +2412,8 @@ Dynamic project information belongs to dedicated documents such as:
 
 Whenever implementation changes the long-term architecture, engineering philosophy, or project identity, this document should be reviewed and updated.
 
+PROJECT_CONTEXT.md should remain stable throughout the lifetime of the project and should not be modified as part of routine engineering work.
+
 ---
 
 # Document Maintenance Policy
@@ -2512,41 +2427,35 @@ PROJECT_CONTEXT.md should only be updated when one or more of the following chan
 - Engineering governance changes.
 - System boundaries change.
 
-Routine development progress must never require updates to this document.
+Routine engineering activities must update only:
+
+- SESSION_CONTEXT.md
+- TODO.md
+- CHANGELOG.md
+- ROADMAP.md
+
+Routine development progress must never require updates to PROJECT_CONTEXT.md.
+
+PROJECT_CONTEXT.md should only change when the long-term engineering identity evolves.
 
 ---
 
-# End of PROJECT_CONTEXT.md
+# 30. Document Status
 
-Version
+| Item | Value |
+|------|-------|
+| Version | 2.0 |
+| Status | Frozen |
+| Update Policy | Architecture Changes Only |
+| Maintained By | Project Owner & AI Engineering Partner |
+| Engineering Model | Production-Grade Development |
+| Classification | Engineering Context (Long-Term) |
+| Primary Source of Truth | Repository Source Code |
 
-2.0
-
-Status
-
-Frozen
-
-Maintained By
-
-Project Owner & AI Engineering Partner
-
-Engineering Model
-
-Production-Grade Development
-
-Document Classification
-
-Engineering Context (Long-Term)
-
-Primary Source of Truth
-
-Repository Source Code
-
-Supporting Engineering Documents are authoritative only within their respective responsibilities defined by this document.
+Supporting engineering documents are authoritative only within their respective responsibilities defined by this document.
 
 - CHAT_BOOTSTRAP.md
 - SESSION_CONTEXT.md
-- PROJECT_CONTEXT.md
 - ARCHITECTURE.md
 - ROADMAP.md
 - CHANGELOG.md

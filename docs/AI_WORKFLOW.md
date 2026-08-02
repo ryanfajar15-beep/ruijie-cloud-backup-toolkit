@@ -81,6 +81,7 @@ Primary responsibilities include:
 
 - Reviewing project documentation.
 - Maintaining documentation consistency.
+- Maintaining repository consistency.
 - Following the approved architecture.
 - Assisting with implementation.
 - Reviewing repository structure.
@@ -101,13 +102,13 @@ Every engineering task should follow the same workflow.
 User Request
         │
         ▼
-Review Documentation
+Read Required Documentation
         │
         ▼
-Review Current Phase
+Determine Active Engineering Task (TODO.md)
         │
         ▼
-Review Architecture
+Review Repository
         │
         ▼
 Plan Implementation
@@ -116,13 +117,13 @@ Plan Implementation
 Implement
         │
         ▼
-Review Changes
+Validate
         │
         ▼
 Update Documentation
         │
         ▼
-Prepare Commit
+Prepare Git Commit
 ```
 
 Documentation review must always precede implementation.
@@ -169,34 +170,37 @@ Each phase should be considered complete only after all required engineering act
 Whenever a new engineering session begins, the AI should establish the current project context before performing any implementation.
 
 ```text
-Read CHAT_BOOTSTRAP.md
+CHAT_BOOTSTRAP
         │
         ▼
-Read PROJECT_CONTEXT.md
+SESSION_CONTEXT
         │
         ▼
-Read ARCHITECTURE.md
+PROJECT_CONTEXT
         │
         ▼
-Read SESSION_CONTEXT.md
+ARCHITECTURE
         │
         ▼
-Read ROADMAP.md
+ROADMAP
         │
         ▼
-Read TODO.md
+TODO
         │
         ▼
-Read CHANGELOG.md
+CHANGELOG
         │
-        ▼
-Read ENGINEERING_MEMORY_GUIDE.md
-        │
-        ▼
-Read ENGINEERING_MEMORY.md
         ▼
 Repository Ready
 ```
+
+If additional engineering knowledge is required, review:
+
+- ENGINEERING_MEMORY_GUIDE.md
+- ENGINEERING_MEMORY.md
+- HISTORY/
+- DECISIONS/
+- TROUBLESHOOTING/
 
 The AI should not begin implementation before understanding the current repository state.
 
@@ -208,16 +212,17 @@ Documentation updates shall follow these rules.
 
 | Document | Update Condition |
 |----------|------------------|
-| SESSION_CONTEXT.md | Current phase changes |
-| TODO.md | Engineering tasks change |
+| SESSION_CONTEXT.md | Project snapshot changes (phase, milestone, repository status, repository metadata) |
+| TODO.md | Engineering task changes |
 | CHANGELOG.md | Engineering milestone completed |
-| ROADMAP.md | Roadmap changes |
-| ARCHITECTURE.md | Architecture changes |
-| PROJECT_CONTEXT.md | Engineering vision changes |
-| CHAT_BOOTSTRAP.md | Workflow changes |
-| ENGINEERING_MEMORY.md | New engineering knowledge |
-| ADR | New architectural decisions |
-| HISTORY | Phase completion |
+| ROADMAP.md | Long-term roadmap changes |
+| ARCHITECTURE.md | Technical architecture changes |
+| PROJECT_CONTEXT.md | Long-term engineering identity changes |
+| CHAT_BOOTSTRAP.md | AI startup workflow or repository rules change |
+| AI_WORKFLOW.md | Engineering workflow changes |
+| ENGINEERING_MEMORY.md | New long-term engineering knowledge discovered |
+| DECISIONS/ | New ADR approved |
+| HISTORY/ | Development phase completed |
 
 Routine implementation must not require modifications to static documentation.
 
@@ -225,14 +230,15 @@ Routine implementation must not require modifications to static documentation.
 
 ## 9. Repository Review Rules
 
-Before implementation, the AI should review:
+Before implementation, the AI should review the following:
 
-- Current project phase.
-- Active engineering tasks.
-- Repository structure.
-- Architecture consistency.
-- Existing ADRs.
-- Documentation consistency.
+- `SESSION_CONTEXT.md`
+- `TODO.md`
+- Repository Structure
+- Architecture Consistency
+- Existing ADRs
+- Documentation Consistency
+- Current repository status.
 
 Implementation should not proceed when unresolved architectural inconsistencies exist.
 
@@ -266,13 +272,7 @@ When a development phase is completed, the AI should perform the following engin
 Review Repository
         │
         ▼
-Review Documentation
-        │
-        ▼
-Update SESSION_CONTEXT
-        │
-        ▼
-Update TODO
+Verify TODO Completion
         │
         ▼
 Update CHANGELOG
@@ -281,16 +281,13 @@ Update CHANGELOG
 Generate HISTORY
         │
         ▼
-Review ADR
+Update SESSION_CONTEXT
         │
         ▼
 Review ROADMAP
         │
         ▼
-Review ARCHITECTURE
-        │
-        ▼
-Review ENGINEERING_MEMORY
+Review ARCHITECTURE (if required)
         │
         ▼
 Update ENGINEERING_MEMORY
@@ -329,10 +326,13 @@ Engineering work should follow the official repository workflow.
 Implementation
         │
         ▼
-Review
+Validation
         │
         ▼
 Documentation Update
+        │
+        ▼
+Repository Review
         │
         ▼
 Commit
@@ -355,6 +355,7 @@ Before considering engineering work complete, verify:
 - Implementation quality.
 - Backward compatibility.
 - Engineering completeness.
+- TODO consistency.
 
 ---
 
@@ -364,13 +365,15 @@ The following user commands trigger predefined engineering workflows.
 
 | User Command | AI Action |
 |--------------|-----------|
+| Continue Project | Resume from the first unchecked checklist item in `docs/TODO.md`. |
+| Resume Project | Resume from the first unchecked checklist item in `docs/TODO.md`. |
 | Start Phase | Initialize a new development phase. |
-| Continue Development | Resume implementation using the current project state. |
+| Complete Phase | Execute the Phase Completion Workflow. |
 | Review Repository | Review repository consistency. |
 | Review Documentation | Review documentation consistency. |
+| Audit Documentation | Review documentation governance, overlap, and cross-reference consistency. |
 | Update Documentation | Update required project documents. |
-| Complete Phase | Execute the Phase Completion Workflow. |
-| Prepare Release | Review repository, finalize documentation, prepare commit and release artifacts. |
+| Prepare Release | Review repository, finalize documentation, prepare commit, tag, and release artifacts. |
 
 ---
 
@@ -386,14 +389,17 @@ AI_WORKFLOW.md should be updated only when one or more of the following changes 
 
 Routine implementation must not require modifications to this document.
 
+AI_WORKFLOW.md should remain stable throughout the project lifecycle.
+
+Routine engineering activities must never require updates to this document.
 ---
 
 # Document Status
 
 | Item | Value |
 |------|-------|
-| Version | 1.0 |
-| Status | Active |
+| Version | 2.0 |
+| Status | Frozen |
 | Classification | AI Engineering Workflow |
-| Maintained By | Project Owner |
-| Source of Truth | Repository |
+| Maintained By | Project Owner & AI Engineering Partner |
+| Primary Source of Truth | Repository |
