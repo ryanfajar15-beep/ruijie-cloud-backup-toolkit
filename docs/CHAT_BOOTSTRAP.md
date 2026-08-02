@@ -188,6 +188,19 @@ Melanjutkan project dari kondisi terakhir tanpa mengulang investigasi maupun kep
 
 ---
 
+Task Resolution Rule
+--------------------
+
+AI must determine the current engineering task exclusively from docs/TODO.md.
+
+SESSION_CONTEXT.md provides project summary only.
+
+If a conflict exists between SESSION_CONTEXT.md and TODO.md, TODO.md is authoritative for active engineering tasks.
+
+AI must always continue from the first unchecked checklist item in TODO.md unless explicitly instructed otherwise.
+
+---
+
 # Core Architecture
 
 Workflow utama
