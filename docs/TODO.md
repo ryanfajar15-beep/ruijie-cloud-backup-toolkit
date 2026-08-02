@@ -46,9 +46,9 @@ Stage 2 — Authentication Metadata
 [x] Domain Discovery
 [x] Session Cookie Metadata
 [x] Session Validation Metadata
-[ ] Redirect Flow Metadata
+[x] Redirect Flow Metadata
 
-[ ] Generate authentication_catalog.json
+[x] Generate authentication_catalog.json
 
 
 Stage 3 — Workflow Discovery
